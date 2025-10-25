@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { GISCUS } from '../config';
+import { GISCUS, SITE } from '../config';
 
 const Comments = () => {
   useEffect(() => {
@@ -16,7 +16,7 @@ const Comments = () => {
     script.setAttribute('data-reactions-enabled', GISCUS.reactionsEnabled?.toString() || '1');
     script.setAttribute('data-emit-metadata', '0');
     script.setAttribute('data-input-position', GISCUS.inputPosition || 'bottom');
-    script.setAttribute('data-theme', GISCUS.theme || 'light');
+    script.setAttribute('data-theme', SITE.lightAndDarkMode ? 'light' : 'dark');
     script.setAttribute('data-lang', 'ko'); // Since site lang is ko
 
     const commentsDiv = document.getElementById('comments-container');
@@ -32,7 +32,7 @@ const Comments = () => {
       };
 
       const observer = new MutationObserver(() => {
-        const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        const currentTheme = SITE.lightAndDarkMode ? 'light' : 'dark';
         updateTheme(currentTheme);
       });
       observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });

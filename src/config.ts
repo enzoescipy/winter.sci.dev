@@ -73,6 +73,6 @@ export const GISCUS = {
     reactionsEnabled: '1',
     emitMetadata: '0',
     inputPosition: 'bottom',
-    theme: 'light', // or 'https://user-images.githubusercontent.com/.../og-image.png' for custom
+    theme: 'light',
     lang: 'ko',
 } as const;
