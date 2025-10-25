@@ -29,6 +29,7 @@ import filmMovieImage from "./source/film-movie.jpg";
 import dataFlowImage from "./source/data-flow.jpg";
 import debateImage from "./source/debate.jpg";
 import colaborateImage from "./source/colaborate.jpg";
+import writeImage from "./source/write.jpg";
 
 
 
@@ -72,7 +73,7 @@ import colaborateImage from "./source/colaborate.jpg";
 그 원리는 절대 단순하진 않습니다. 하지만, 쉽게 말해보자면 그들은 *"누가누가 더 자연스럽게 글 덧붙이기 잘하나"* 놀이를 시켰다고 볼 수 있겠네요. ~~(?)~~
 
 <CaptionCenteredImage 
-  imageSrc={filmMovieImage}
+  imageSrc={writeImage}
   caption="릴레이 이야기 쓰기, 해보신 적 있으신가요?"
   imageAlt="릴레이 이야기 쓰기, 해보신 적 있으신가요?"
 />
@@ -137,8 +138,8 @@ Transformer 아키텍처의 *"주의집중(Attention)"* 은 아름답지만, 엄
 
 <CaptionCenteredImage 
   imageSrc={debateImage}
-  caption="열띈 토론이 빚는 새로운 의미의 탄생, 그것이 BERT의 철학입니다."
-  imageAlt="열띈 토론이 빚는 새로운 의미의 탄생, 그것이 BERT의 철학입니다."
+  caption="열띤 토론이 빚는 새로운 의미의 탄생, 그것이 BERT의 철학입니다."
+  imageAlt="열띤 토론이 빚는 새로운 의미의 탄생, 그것이 BERT의 철학입니다."
 />
 
 
@@ -155,7 +156,7 @@ Transformer 아키텍처의 *"주의집중(Attention)"* 은 아름답지만, 엄
 
 ### 재잘재잘 GPT와 묵언수행 BERT 
 
-그 결과, 인코더 BERT는 '다음 단어'를 예측하지 않습니다. 대신, 문장 전체의 의미를 깊이 있게 응축한, 정제된 **'이해의 정수(Essence of Understanding)'** 숫자 뭉치를 뱉어냅니다.
+그 결과, 인코더 BERT는 '다음 단어'를 예측하지 않습니다. 대신, 문장 전체의 의미를 깊이 있게 응축한, 정제된 **'이해의 정수(Essence of Understanding)'** 숫자 뭉치를 뱉어냅니다.<sup><a id='cite-ref-3' href='#cite-fn-3' className='inline-link'>3</a></sup>
 
 이것은 단순한 수의 나열이 아닙니다. 문장의 감정, 뉘앙스, 숨겨진 의미까지 모두 포함한, 그 문장에 대한 **깊은 통찰**입니다. 인코더는 문장을 '이해'하고, 그 이해를 숫자로 표현하는 전문가인 셈입니다.
 
@@ -193,7 +194,7 @@ Transformer 아키텍처의 *"주의집중(Attention)"* 은 아름답지만, 엄
   **"그렇다면, 이 둘을 합친다면 어떨까요?"**
 </blockquote>
 
-이 질문이 바로 **검색 증강 생성(Retrieval-Augmented Generation)**, 줄여서 **RAG**라는 기술의 시작점이었습니다. 이는 마치 **오픈북 시험**을 보는 것과 같습니다.
+이 질문이 바로 **검색 증강 생성(Retrieval-Augmented Generation)**, 줄여서 **RAG**라는 기술의 시작점이었습니다.<sup><a id='cite-ref-4' href='#cite-fn-4' className='inline-link'>4</a></sup> 이는 마치 **오픈북 시험**을 보는 것과 같습니다.
 
 ### 오픈북 시험, RAG
 
@@ -234,7 +235,38 @@ Transformer 아키텍처의 *"주의집중(Attention)"* 은 아름답지만, 엄
   **오늘은 컴퓨터 좀 그만 하렴. 왠 밤에 커피니. 몸상할라.**
 </blockquote>
 
+## vBERT, 시간의 연금술사: 의미의 감옥을 넘어 시간을 이해하다
 
+ChatGPT는 아주 예의 바르고 훌륭하게 대답했습니다. RAG라는 '의미의 도서관'을 참조했기에, 커피와 관련된 과거의 모든 대화 기록을 완벽하게 '의미적으로' 연결하여 복기해냈습니다. 하지만 밤과 커피, 그리고 고독과 가족의 걱정이라는, 우리에게는 너무나도 중요했던 **'시간적 맥락'** 을 전혀 이해하지 못했습니다.
+
+RAG에게 어머니의 이야기는 그저 '또 다른 텍스트 단편'일 뿐입니다. 매일 밤 저를 걱정하시는 어머니의 마음과 밤에 마시는 커피의 연관성이 또 하나의 거대한 '사건'임을 그녀는 알지 못합니다.
+
+<blockquote>
+  **"만약 AI에게, 서로 다른 두 권의 책(커피와 어머니의 이야기)을 시간 순서대로 보여주고, 그 '시간의 흐름' 속에서 무슨 일이 일어났는지 단 하나의 벡터로 요약하라고 시키면 어떨까?"**
+</blockquote>
+
+이것이 바로 **vBERT(Vectorized BERT)**의 핵심 질문이었습니다. vBERT는 단어(Text)의 배열을 학습하는 BERT와 달리, **'의미 덩어리(Vector)의 배열, 즉 Sequence of Embeddings'** 자체를 학습하기 위해 태어났습니다.
+
+<CaptionCenteredImage 
+  imageSrc={filmMovieImage}
+  caption="의미의 흐름을 마치 한 편의 영화처럼 읽어내는 AI"
+  imageAlt=""
+  className='h-[500px] object-cover'
+/>
+
+vBERT는 시간의 흐름 속에 놓인 '씁쓸한 커피' `벡터`, '쓸쓸한 감정' `벡터`, 그리고 '어머니의 걱정' `벡터`를 각각 독립적으로 보는 것이 아닙니다. vBERT는 이 세 가지 분리된 의미 덩어리(벡터)들을 하나의 '시간적 흐름' 안에서 녹여내, 최종적으로 **'그날 밤의 분위기'** 라는, 단 하나의 새로운 `벡터`로 응축해냅니다.
+
+마치 한 편의 영화에서 각 장면의 의미(벡터)들이 합쳐져 영화 전체의 핵심 감정(하나의 새로운 벡터)을 만들어내듯이, vBERT는 시간적으로 이어진 여러 임베딩 시퀀스를 하나의 최종적인 '시퀀스 임베딩'으로 제련하는 **'시간의 연금술사'** 입니다.
+
+<blockquote>
+  **"vBERT는 AI가 마침내 '의미'의 감옥을 부수고, '시간'을 이해하도록 돕는 새로운 시대의 서막을 열었습니다."**
+</blockquote>
+
+이제 AI는 단순히 '무슨 단어가 다음으로 올지' 혹은 '어떤 문서가 가장 관련 있을지'를 넘어, '어떤 사건들이 어떤 순서로 일어나 전체 이야기의 맥락을 형성하는지'를 파악할 수 있게 된 것입니다.
+
+이것이 바로, 제가 여러분에게 소개하고자 하는 **vBERT** 입니다. 
+
+*(문서는 계속하여 최신화됩니다. 곧 관심있는 분들께 제 vBERT 기술로 빚어낸 모델을, 자신있게 이곳에서 선보이겠습니다. 감사합니다.)*
 
 <details>
   <summary>참고자료 | Reference And Citation</summary>
@@ -245,5 +277,13 @@ Transformer 아키텍처의 *"주의집중(Attention)"* 은 아름답지만, 엄
   <p>
     <a href="#cite-ref-2" id="cite-fn-2" className='inline-link'>[2]</a>
     <a href="https://time.com/6238781/chatbot-chatgpt-ai-interview/?utm_source=chatgpt.com" className='inline-link'>AI Chatbots Are Getting Better. But an Interview With ChatGPT Reveals Their Limits</a>, Times
+  </p>
+  <p>
+    <a href="#cite-ref-3" id="cite-fn-3" className='inline-link'>[3]</a>
+    <a href="https://arxiv.org/abs/1810.04805" className='inline-link'>BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a>, Jacob Devlin et al.
+  </p>
+  <p>
+    <a href="#cite-ref-4" id="cite-fn-4" className='inline-link'>[4]</a>
+    <a href="https://arxiv.org/abs/2005.11401" className='inline-link'>Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</a>, Patrick Lewis et al.
   </p>
 </details>
