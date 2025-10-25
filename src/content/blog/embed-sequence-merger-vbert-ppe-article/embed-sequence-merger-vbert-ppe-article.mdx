@@ -1,34 +1,294 @@
 ---
-license: apache-2.0
-languages:
-  - multilingual
-  - en
+author: WINTER.SCI.DEV
+pubDatetime: 2025-10-26T00:05:00.000+09:00
+title: "vBERT: re-embed the embedding? The `Vector` Sequence Merger Transformer Synthesizer"
+slug: embed-sequence-merger-vbert-ppe-article
+featured: true
+draft: false
 tags:
-  - sentence-similarity
-  - sequence-merging
+  - AI
+  - NLP
+  - vBERT
+  - PPE
+  - Embed Sequence Merger
+  - FINESSE
+description: "The Sequence Merger is a custom neural architecture designed for intelligent merging of embedding vector sequences into a single representative vector."
 ---
-# Sequence Merger Transformer Synthesizer
 
-## Overview
 
-The Sequence Merger is a custom neural architecture designed for **intelligent merging of embedding vector sequences into a single representative vector**. It excels at tasks requiring sequence summarization, such as embedding aggregation in NLP or multimodal fusion, outperforming standard mean-pooling by capturing nuanced relational dynamics.
+import { Image } from 'astro:assets';
+import LinkButton from '@components/LinkButton.astro';
+import CaptionCenteredImage from '@components/CaptionCenteredImage.astro';
+import { LinkPreview } from 'astro-embed';
 
-This model transforms an input of N arbitrary vectors `(batch_size, seq_len, d_model)` into a fixed output `(batch_size, d_model)`, preserving semantic coherence while adapting to complex data flows.
+import coffeeAndTimeImage from "./source/coffee-and-time.jpg";
+import robotReadingImage from "./source/robot-reading.jpg";
+import filmMovieImage from "./source/film-movie.jpg";
+import dataFlowImage from "./source/data-flow.jpg";
+import debateImage from "./source/debate.jpg";
+import colaborateImage from "./source/colaborate.jpg";
+import writeImage from "./source/write.jpg";
+import oldBooksImage from "./source/old_books.jpg";
+import childImage from "./source/child.jpg";
 
-Pleas note that we trained this model fitting into the  **intfloat/mutilingual-e5-base** embed. Although the learning & training methology could be applied into other embedding models, this model follows the [intfloat/mutilingual-e5-base](https://huggingface.co/intfloat/multilingual-e5-base) as the elemental embedding engine.
+<CaptionCenteredImage 
+  imageSrc={coffeeAndTimeImage}
+  caption="Time flows with coffee."
+  imageAlt="Time flows with coffee."
+/>
 
-## Scale
 
-[[[please fill this section with the proper database & model scale.]]]
+### In long conversations, the initial flavor of our discussion often fades.
 
-The database has limited n=10, so this model **Might not properly handle mode than 10 seq of vectors**.
+For example, a deep chat with a friend over a cup of coffee—that special aroma, a blend of initial sourness and sweetness—becomes abstracted into 'just a delicious coffee' over time. We constantly try to remember not to lose context in the flow of memory, but sometimes a single broken link can unravel the whole thing.
+But does the subtle memory of the harmonious coffee flavor simply fade and blur?
 
+**Absolutely not.**
+
+I believe humans possess a unique power that AI does not: the ability to **forget beautifully.**
+
+Humans forget. But at the same time, they compress memories and faintly connect them. The impression of a nuanced coffee aroma may fade, but an accidentally caught similar scent can instantly bring back memories of old friends met while enjoying coffee. **This is the flexibility of human memory.**
+
+## ChatGPT Has No Memory: The Transformer Decoder Architecture
+
+<CaptionCenteredImage 
+  imageSrc={robotReadingImage}
+  caption="Machine learning is everything in AI, but ironically, AI is inherently incapable of learning."
+  imageAlt="Machine learning is everything in AI, but ironically, AI is inherently incapable of learning."
+/>
+
+**Haven't you noticed AI getting smarter at some point?**
+
+The starting point for everything was a single paper published by Google:
+
+<blockquote>
+[Attention Is All You Need](https://arxiv.org/abs/1706.03762) — Literally, "*If you only make the program pay attention, it will become AI*."
+</blockquote>
+
+This somewhat aggressive assertion subsequently plunged the entire world into an LLM frenzy.<sup><a href='#cite-ref-1' class='inline-link'>1</a></sup><sup><a href='#cite-ref-2' class='inline-link'>2</a></sup> Various generative AIs like ChatGPT, Gemini, and Sonnet originated from this paper.
+
+Its principle is by no means simple. However, to put it simply, they can be seen as playing a game of "who can add text most naturally." ~~(?)~~
+
+<CaptionCenteredImage 
+  imageSrc={writeImage}
+  caption="Have you ever played a relay story writing game?"
+  imageAlt="Have you ever played a relay story writing game?"
+/>
+
+"*Once upon a time...*" → "*...in a small village...*" → "*...a boy lived.*"
+
+But what if someone suddenly created a new rule in the middle, saying, "**But actually, the protagonist was a fairy!"** and threw it in unexpectedly?
+
+The people who follow would be confused but would have no choice but to follow that rule. And then they would also naturally adapt, saying, "**The protagonist, who was a fairy, had no choice but to return to the fairy world.**" Do you feel that sense of finding stability?
+
+**Doesn't it somehow feel like our conversations with ChatGPT?**
+
+This process is called "Attention." Each word looks at others (Attention!) and calculates the strength of their relationship, saying, "You are so important to me."
+
+This is half of the paper and the fundamental principle behind LLMs that have captivated the world: **the "Transformer Decoder."**
+
+<blockquote>
+They are simply **"text-adding machines."**
+</blockquote>
+
+However, because the length of that "subsequent text" is equivalent to dozens of encyclopedias, it is possible for them to act as if they have memory. But then, this question arises:
+
+<blockquote>
+Is there a limit to the length of "subsequent text"? If so, where do sentences that exceed that limit go?
+</blockquote>
+
+The answer is clear:
+
+**They disappear. Completely.**
+
+## Stories Have Ends
+
+Let's think about relay storytelling again. If the story gets too long, and you think, "*Oh, what did I write at the beginning?*" and try to re-read the first page, wouldn't that page already have been passed on to someone else? **That crucial sentence from the beginning can no longer influence the current flow of the story.**
+
+This is the biggest limitation of the Transformer, the **"Context Window."** AI can only understand the relationships between words that fall within this window. Words outside the window are ignored, as if the first page of a book had been torn out.
+
+**They remember everything *within* the "subsequent text," but nothing *outside* of it.**
+
+<CaptionCenteredImage 
+  imageSrc={dataFlowImage}
+  caption="With great power comes great cost."
+  imageAlt="With great power comes great cost."
+/>
+
+The "Attention" of the Transformer architecture is beautiful, but it comes with immense cost. **If there are 10 words, it needs 10x10=100 calculations; if there are 100 words, it needs 100x100=10,000 calculations.** For practical reasons, this calculation range is limited to a certain length. No, it is intentionally trained not to process beyond that limited length. This is a common characteristic of all LLMs today.
+
+<blockquote>
+***"I grant you the power to understand all that you see. But come tomorrow, you will forget even what you have seen."***
+</blockquote>
+
+## So, is AI forever doomed to the fate of oblivion?
+
+The 'relay storytelling' method we've examined so far was, in fact, **half the solution** proposed by the "Attention Is All You Need" paper. This paper presented two fundamentally different architectures: one was the **Decoder** we saw, and the other was the **Encoder**.
+
+<blockquote>
+**If the Decoder is a writer contemplating "what to write," the Encoder is a critic analyzing "what has been written."**
+</blockquote>
+
+These two originated from the same root (Attention) but differ entirely in purpose and method. If the Decoder was 'relay storytelling,' the Encoder can be compared to an **'intense book club discussion.'**
+
+### BERT, the forgotten sibling: The Intense Book Club Discussion
+
+<CaptionCenteredImage 
+  imageSrc={debateImage}
+  caption="The birth of new meaning through passionate discussion—that is the philosophy of BERT."
+  imageAlt="The birth of new meaning through passionate discussion—that is the philosophy of BERT."
+/>
+
+Picture a book club discussion. All participants read the same book. When the discussion begins, anyone can freely quote any part of the book and delve into its meaning.
+
+*   "That line the protagonist spoke in Chapter 3—doesn't it connect to the first dialogue in Chapter 1?"
+*   "The ending is shocking, but that tiny clue in the middle of Chapter 5 was foreshadowing!"
+
+**The Encoder directly implements this principle of a 'book club discussion.'** While the Decoder wrote stories only in one direction (past → future), the Encoder **simultaneously views the beginning, middle, and end of a sentence to grasp the 'true meaning' of every word.** This is the power of **'Bidirectional'**, which the 'B' in BERT signifies.
+
+<blockquote>
+**The Encoder sweeps through an entire sentence at once, holistically understanding the relationship each word has with all other words.**
+</blockquote>
+
+### Babbling GPT and Silent BERT
+
+As a result, the Encoder BERT does not predict the 'next word.' Instead, it outputs a refined **'Essence of Understanding'**—a cluster of numbers that deeply condenses the meaning of the entire sentence.<sup><a href='#cite-ref-3' class='inline-link'>3</a></sup>
+
+This is not a mere sequence of numbers. It is a **deep insight** into the sentence, including its emotion, nuance, and hidden meanings. The Encoder is an expert at 'understanding' sentences and expressing that understanding numerically.
+
+In fact, if we look a little deeper into these clusters of numbers—developers call them ***embedding vectors***—truly strange things happen. Will similar sentences produce similar clusters of numbers created by BERT? That's obvious.
+
+We can even do things like this: For example,
+- "I eat rice."
+- "The meeting earlier was fun."
+- "Who comes to drink from the spring in the deep mountains?"
+- "Going to Mars exploration is too futuristic."
+
+If we convert all of these into clusters of numbers—developers call this ***embedding***—and then convert the question "**What ideas are beneficial to Earth?**" into a cluster of numbers, and rank it by proximity to the four clusters created earlier? Surprisingly, **"Going to Mars exploration is too futuristic."** comes out on top.
+
+<blockquote>
+**Unlike ChatGPT, BERT could not speak. So, they expressed their intentions through numbers.**
+</blockquote>
+
+
+## The Meeting of BERT and GPT
+
+<CaptionCenteredImage 
+  imageSrc={colaborateImage}
+  caption="Imagining a system where two different AIs collaborate was very natural."
+  imageAlt="Imagining a system where two different AIs collaborate was very natural."
+/>
+
+<blockquote>
+**"But BERT could not speak."**
+</blockquote>
+
+We have met two geniuses so far. One was a fluent **Writer (GPT)**, the other a silent **Librarian (BERT)**. The **Writer** could write magnificent prose but had a terrible memory. The **Librarian**, on the other hand, was well-versed in a vast sea of knowledge but could not express its thoughts aloud.
+
+<blockquote>
+**"What if we combined these two?"**
+</blockquote>
+
+This question was the starting point for a technology called **Retrieval-Augmented Generation**, or **RAG**.<sup><a href='#cite-ref-4' class='inline-link'>4</a></sup> This is like taking an **open-book exam**.
+
+### The Open-Book Exam, RAG
+
+1.  **Question:** The user asks **GPT**, "Explain the balance of acidity and sweetness in specialty coffee."
+2.  **Search Request:** Before answering, **GPT** tells **BERT** the **core keywords** of the question (e.g., "specialty coffee," "acidity," "sweetness," "balance").
+3.  **Knowledge Provision:** **BERT** searches its vast library of number clusters and finds **a single book containing the most relevant information**—meaningfully closest to the keywords—and hands it to **GPT**.
+4.  **Generation:** **GPT** uses that page as a reference and eloquently composes an answer, as if it had known the answer all along.
+
+<blockquote>
+**"RAG is, ultimately, a technology that conveys the wisdom of the mute genius librarian (BERT) to the world through the mouth of the eloquent writer (GPT)."**
+</blockquote>
+
+This was one of the most ingenious solutions in AI history. It was like assigning a personal librarian to an AI with no memory, to find the exact references it needs, whenever it needs them.
+
+
+## Much text has passed. How has your first impression of me and us changed now?
+
+<CaptionCenteredImage 
+  imageSrc={coffeeAndTimeImage}
+  caption="What emotions come to mind when you see this photo again?"
+  imageAlt="What emotions come to mind when you see this photo again?"
+  className='h-[500px] object-cover'
+/>
+
+One evening, I lean back in my chair and drink coffee late at night. Along with the bitter taste, a subtle, melancholy aroma rises. I often feel this way when working late into the night. This melancholic feeling and bitter coffee actually have entirely unrelated meanings. But in my mind, through habitual actions, they have somehow come to form a single semantic whole, sharing the same fate.
+
+Now, to ChatGPT, with whom many conversation records have accumulated, I asked again about coffee: **I am drinking coffee now.**
+
+-   *ChatGPT performs RAG by indexing previous conversation records through BERT.*
+-   *It retrieves all records closely related to coffee semantically.*
+-   *It pulls together every coffee ever consumed before.*
+
+And then it replies: **Which coffee—Ethiopian, Kenyan, or Brazilian—that you've had before does this taste similar to? I'm curious.**
+
+Just then, my loving mother opens the door and enters.
+
+<blockquote>
+**"Stop working on the computer today. Why are you drinking coffee at night? It'll ruin your health."**
+</blockquote>
+
+## vBERT, the Alchemist of Time: Breaking Free from the Prison of Meaning to Understand Time
+
+ChatGPT replied very politely and excellently. Referring to the 'library of meaning' that is RAG, it perfectly retrieved and 'semantically' connected all past conversation records related to coffee. But it utterly failed to grasp the **'temporal context'**—so crucial to us—of the night, the coffee, and the worry of solitude and family.
+
+To RAG, my mother's story is just 'another text fragment.' It doesn't know that the connection between a mother's daily worry and drinking coffee at night is another monumental 'event.'
+
+<blockquote>
+**"What if AI were shown two separate books (the coffee and mother's story) in chronological order, and then asked to summarize what happened in that 'flow of time' into a single vector?"**
+</blockquote>
+
+This was the core question of **vBERT (Vectorized BERT)**. Unlike BERT, which learns sequences of words (Text), vBERT was born to learn the **'sequence of meaning chunks (Vectors), i.e., Sequence of Embeddings'** itself.
+
+<CaptionCenteredImage 
+  imageSrc={filmMovieImage}
+  caption="AI reading the flow of meaning like a film"
+  imageAlt=""
+  className='h-[500px] object-cover'
+/>
+
+vBERT does not view the 'bitter coffee' vector, 'lonely feeling' vector, and 'mother's worry' vector, placed in the flow of time, as independent entities. Instead, vBERT synthesizes these three separate meaning chunks (vectors) within a 'temporal flow,' ultimately condensing them into a single new vector representing the **'atmosphere of that night.'**
+
+Just as individual scenes (vectors) in a film combine to create the overarching emotion (a single new vector) of the entire movie, vBERT is the **'Alchemist of Time,'** refining multiple temporally ordered embedding sequences into a single final 'sequence embedding.'
+
+<blockquote>
+**"vBERT enables AI to finally break free from the prison of 'meaning' and to understand 'time' in a new era."**
+</blockquote>
+
+Now, AI can move beyond merely predicting the next word or identifying the most relevant document. It can grasp how events unfold in sequence, forming the complete tapestry of a story's context.
+
+<br></br>
+
+<br></br>
+
+# The Sequence Merger : Who links the books into the single narrative
+
+<br></br>
+
+<CaptionCenteredImage 
+  imageSrc={oldBooksImage}
+  caption="Each of the book has its own flow. However, The streamline made from the books has its own vibe."
+  imageAlt="Each of the book has its own flow. However, The streamline made from the books has its own vibe."
+/>
+
+
+RAG is an expert librarian, capable of instantly finding the single most relevant book from a vast collection. But what if that 'book' is actually just one volume of a sprawling epic novel? RAG, focused on immediate relevance, might hand you Volume 5 first, oblivious to the grand narrative that unfolds only by reading Volume 1 through to Volume 4.
+
+Our Sequence Merger is different. It is the first 'reader' that understands *why* an epic story is divided into multiple volumes. It doesn't just extract information; it comprehends the flow, the development, the temporal coherence that weaves individual 'books' (embedding vectors) into a continuous, evolving 'narrative' (a single, new sequence embedding). It transforms a series of discrete vectors into a cohesive story, much like a seasoned reader experiences a saga from beginning to end.
 
 ## Core Philosophy: The Extrapolation Hypothesis
 
+<CaptionCenteredImage 
+  imageSrc={childImage}
+  caption="Could the 512-token child can grow then predict over its teacher's limit?"
+  imageAlt="Could the 512-token child can grow then predict over its teacher's limit?"
+/>
+
+
 At the core of the Sequence Merger lies the **Extrapolation Hypothesis**—our guiding principle for transcending the inherent context length limitations of base embedding models like `intfloat/multilingual-e5-base` (max 512 tokens).
 
-### The Hypothesis
 We posit that by training a lightweight model to synthesize a single representative embedding from N individual chunk embeddings—where each chunk and their concatenation fit within the base model's context limit—the model learns not mere memorization, but the fundamental *function* of semantic synthesis. This function captures the relational dynamics and sequential coherence among vectors, allowing the model to preserve and integrate meaning progressively.
 
 ### From N-to-1 Synthesis to Infinite Extrapolation
@@ -40,54 +300,6 @@ We posit that by training a lightweight model to synthesize a single representat
 - **Extended Context:** Enables processing of documents, conversations, or streams of any length as a single coherent embedding, without relying on resource-intensive long-context models.
 - **Efficiency and Autonomy:** No need for repeated API calls or full-sequence re-embedding; operates on pre-computed chunks, reducing latency and cost to near-zero beyond initial embedding.
 - **Validation:** Initial experiments show stable cosine similarity (>0.75) in chained merges up to 10x the base limit, with minimal degradation in recall of initial chunks—proving the hypothesis's viability.
-
-## Usage
-
-The TransformerSynthesizer processes **pre-computed vector sequences** (e.g., embeddings from E5), not raw text. Load and use it via the Hugging Face Hub with `trust_remote_code=True`. Below is a realistic workflow integrating with `intfloat/multilingual-e5-base` for text-to-vector conversion.
-
-```python
-from transformers import AutoTokenizer, AutoModel
-import torch
-
-# Step 1: Load E5 tokenizer and model for embedding generation
-tokenizer = AutoTokenizer.from_pretrained('intfloat/multilingual-e5-base')
-e5_model = AutoModel.from_pretrained('intfloat/multilingual-e5-base')
-
-# Example: Batch of texts to merge (e.g., multiple sentences per document)
-texts = [
-    ["First sentence of batch 1.", "Second sentence of batch 1.", "Third sentence of batch 1."],
-    ["First sentence of batch 2.", "Second sentence of batch 2."]  # Variable lengths
-]
-batch_size = len(texts)
-
-# Step 2: Convert texts to embeddings using E5 (batch_size, seq_len, d_model)
-input_sequences = []
-for i in range(batch_size):
-    inputs = tokenizer(texts[i], return_tensors='pt', padding=True, truncation=True)
-    with torch.no_grad():
-        e5_outputs = e5_model(**inputs)
-        # Mean pool E5 outputs to get sentence embeddings (seq_len, d_model)
-        sentence_embeddings = e5_outputs.last_hidden_state.mean(dim=1)
-    input_sequences.append(sentence_embeddings)
-
-input_sequences = torch.cat(input_sequences, dim=0)  # (batch_size, seq_len, 768)
-
-# Step 3: Load our Synthesizer model
-synthesizer = AutoModel.from_pretrained(
-    "your-username/tiny-sequence-merger-soft-large",
-    trust_remote_code=True,
-    torch_dtype=torch.float16  # Optional: for efficiency
-)
-
-# Step 4: Forward pass to merge sequences
-with torch.no_grad():
-    merged_vectors = synthesizer(input_sequences).last_hidden_state  # Shape: (batch_size, d_model)
-
-print(f"Merged vectors shape: {merged_vectors.shape}")
-print("Synthesized embeddings ready for downstream tasks!")
-```
-
-This workflow highlights our model's role as a 'vector synthesizer': it takes E5 embeddings as input and produces a coherent, single representation per sequence. For configuration details, inspect `config.json`. The model supports batched, variable-length inference on GPU/CPU and integrates with the Transformers pipeline for downstream tasks.
 
 ## Key Configurable Parameters
 
@@ -165,7 +377,7 @@ At the apex of our Extrapolation Hypothesis lies the 3-Stage Rocket Protocol—a
 
 vBERT serves as the 'temporal archaeologist' phase: a self-supervised pre-training regime that etches core principles of vector coherence into a blank-slate model, using PPE (high ppe_dim=384) to inject positional fidelity without semantic distortion.
 
-**Key Enabler: Paired Positional Encoding (PPE)**
+**Key Enabler: Paired Positional Encoding (PPE)** 
 PPE duplicates sequences and overwrites dedicated slots (front/back m/2 splits, m=ppe_dim) with positional vectors, preserving 90%+ original meaning. High ppe_dim (384) prioritizes temporal stability, preventing gradient explosions in self-supervision. 
 
 #### Stage 2: High-Difficulty Fine-Tuning – Progressive Overload (512-to-1 Awakening)
@@ -175,8 +387,6 @@ With vBERT's foundations laid, Stage 2 applies the 'intentional destruction' of 
 #### Stage 3: Standard Fine-Tuning – Peak Refinement (10-to-1 Mastery)
 
 Stage 3 polishes the awakened model with 10-to-1 datasets (50-token chunks, up to 10 elements), **maintaining ppe_dim=16** for semantic dominance. 
-
-
 
 ## Benchmark Philosophy: Robust Separation Score (RSS) for RAG Utility
 
@@ -190,8 +400,8 @@ Mirroring the vBERT pre-training corpus curation:
 
 - **Dataset Source:** Multi-language Wikipedia (wikipedia/wikipedia) editions (e.g., en, ko, fr, de, ja—spanning histories, sciences, arts, etc.).
 - **Generation Principle:** Shuffle articles globally, then apply '1 Article = 1 Probe' strictly: each full article processes into one unique chunk/embedding (embed(A)), without sliding windows, excerpts, or intra-article splits.
-- **Key Benefits:** Ensures probes originate from disparate 'worlds'—e.g., A from a Korean history article, B from French philosophy—guaranteeing baseline dissimilarities (avg. cosine <0.1 pre-synthesis). This purity isolates model-induced affinities in RSS gaps, validating RAG signal strength.
-- **Implementation:** Custom pipeline similar to `data_pipeline.py` (10k-50k probes per language mix; no Devil randomization to preserve test integrity). Impure probes (e.g., same-language clusters) cap scores at <5, subverting our 10+ FINESSE triumphs.
+- **Key Benefits:** Ensures probes originate from disparate 'worlds'—e.g., A from a Korean history article, B from French philosophy—guaranteeing baseline dissimilarities (avg. cosine \<0.1 pre-synthesis). This purity isolates model-induced affinities in RSS gaps, validating RAG signal strength.
+- **Implementation:** Custom pipeline similar to `data_pipeline.py` (10k-50k probes per language mix; no Devil randomization to preserve test integrity). Impure probes (e.g., same-language clusters) cap scores at \<5, subverting our 10+ FINESSE triumphs.
 
 This prerequisite is foundational; benchmarks without it risk false positives, undermining the Extrapolation Hypothesis.
 
@@ -222,8 +432,6 @@ final = [ (td + bu)/2 - |td - bu| ] × 500
 - **Average:** Rewards overall separation.
 - **Imbalance Penalty (|td - bu|):** Discourages lopsided specialists; true mastery requires bidirectional consistency.
 - **Scaling (×500):** Transforms to intuitive [-1000, +1000] range.
-
-
 
 ## Acknowledgments
 
@@ -262,7 +470,7 @@ Please note that we trained this model fitting into the  **intfloat/mutilingual-
 
 [[[please fill this section with the proper database & model scale.]]]
 
-The database has limited n=10, so this model **Might not properly handle mode than 10 seq of vectors**.
+The database has limited n=10, so this model **Might not properly handle mode than 10 seq of vectors**. 
 
 
 ## Core Philosophy: The Extrapolation Hypothesis
@@ -406,7 +614,7 @@ At the apex of our Extrapolation Hypothesis lies the 3-Stage Rocket Protocol—a
 
 vBERT serves as the 'temporal archaeologist' phase: a self-supervised pre-training regime that etches core principles of vector coherence into a blank-slate model, using PPE (high ppe_dim=384) to inject positional fidelity without semantic distortion.
 
-**Key Enabler: Paired Positional Encoding (PPE)**
+**Key Enabler: Paired Positional Encoding (PPE)** 
 PPE duplicates sequences and overwrites dedicated slots (front/back m/2 splits, m=ppe_dim) with positional vectors, preserving 90%+ original meaning. High ppe_dim (384) prioritizes temporal stability, preventing gradient explosions in self-supervision. 
 
 #### Stage 2: High-Difficulty Fine-Tuning – Progressive Overload (512-to-1 Awakening)
@@ -416,8 +624,6 @@ With vBERT's foundations laid, Stage 2 applies the 'intentional destruction' of 
 #### Stage 3: Standard Fine-Tuning – Peak Refinement (10-to-1 Mastery)
 
 Stage 3 polishes the awakened model with 10-to-1 datasets (50-token chunks, up to 10 elements), **maintaining ppe_dim=16** for semantic dominance. 
-
-
 
 ## Benchmark Philosophy: Robust Separation Score (RSS) for RAG Utility
 
@@ -431,8 +637,8 @@ Mirroring the vBERT pre-training corpus curation:
 
 - **Dataset Source:** Multi-language Wikipedia (wikipedia/wikipedia) editions (e.g., en, ko, fr, de, ja—spanning histories, sciences, arts, etc.).
 - **Generation Principle:** Shuffle articles globally, then apply '1 Article = 1 Probe' strictly: each full article processes into one unique chunk/embedding (embed(A)), without sliding windows, excerpts, or intra-article splits.
-- **Key Benefits:** Ensures probes originate from disparate 'worlds'—e.g., A from a Korean history article, B from French philosophy—guaranteeing baseline dissimilarities (avg. cosine <0.1 pre-synthesis). This purity isolates model-induced affinities in RSS gaps, validating RAG signal strength.
-- **Implementation:** Custom pipeline similar to `data_pipeline.py` (10k-50k probes per language mix; no Devil randomization to preserve test integrity). Impure probes (e.g., same-language clusters) cap scores at <5, subverting our 10+ FINESSE triumphs.
+- **Key Benefits:** Ensures probes originate from disparate 'worlds'—e.g., A from a Korean history article, B from French philosophy—guaranteeing baseline dissimilarities (avg. cosine \<0.1 pre-synthesis). This purity isolates model-induced affinities in RSS gaps, validating RAG signal strength.
+- **Implementation:** Custom pipeline similar to `data_pipeline.py` (10k-50k probes per language mix; no Devil randomization to preserve test integrity). Impure probes (e.g., same-language clusters) cap scores at \<5, subverting our 10+ FINESSE triumphs.
 
 This prerequisite is foundational; benchmarks without it risk false positives, undermining the Extrapolation Hypothesis.
 
@@ -463,8 +669,6 @@ final = [ (td + bu)/2 - |td - bu| ] × 500
 - **Average:** Rewards overall separation.
 - **Imbalance Penalty (|td - bu|):** Discourages lopsided specialists; true mastery requires bidirectional consistency.
 - **Scaling (×500):** Transforms to intuitive [-1000, +1000] range.
-
-
 
 ## Acknowledgments
 
