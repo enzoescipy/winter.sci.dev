@@ -1,0 +1,138 @@
+---
+author: WINTER.SCI.DEV
+pubDatetime: 2025-10-25T22:05:00.000+09:00
+title: "vBERT: 임베딩을 다시 임베딩하기? 처음으로 인공지능을 손수 만들어본 소감"
+slug: embed-sequence-merger-vbert-ppe
+featured: true
+draft: false
+tags:
+  - AI
+  - NLP
+  - vBERT
+  - PPE
+  - Embed Sequence Merger
+  - FINESSE
+  - 커피과학
+  - CVA
+  - 센서리과학
+description: "BERT가 단어를 이해한다면, vBERT는 맥락의 흐름을 '기억'한다. 긴 임베딩 시퀀스를 합성하며 의미를 보존하는 혁명적 벡터. 특수 커피 평가의 복잡한 패턴 추출처럼, vBERT가 RAG 시스템과 과학적 발견을 어떻게 재정의할까"
+---
+
+import { Image } from 'astro:assets';
+import LinkButton from '@components/LinkButton.astro';
+import CaptionCenteredImage from '@components/CaptionCenteredImage.astro';
+import { LinkPreview } from 'astro-embed';
+
+import coffeeAndTimeImage from "./source/coffee-and-time.jpg";
+import robotReadingImage from "./source/robot-reading.jpg";
+import filmMovieImage from "./source/film-movie.jpg";
+import dataFlowImage from "./source/data-flow.jpg";
+
+
+<CaptionCenteredImage 
+  imageSrc={coffeeAndTimeImage}
+  caption="커피와 함께 흘러가는 시간."
+  imageAlt="커피와 함께 흘러가는 시간."
+/>
+
+
+### 긴 대화를 나누다 보면, 제일 처음에 나눴던 이야기의 맛이 희미해지곤 합니다. 
+
+예를 들어, 커피 한 잔을 마시며 친구와 나눴던 깊은 수다—처음의 신맛과 단맛이 어우러진 그 특별한 향이, **시간이 지나면서 '그냥 맛있는 커피'로 추상화되죠.** 우리는 기억의 흐름 속에서 맥락을 잃지 않기 위해 끊임없이 되뇌이지만, 때론 하나의 연결 고리가 끊어지면서 전체가 흐트러지죠. ~~분명히 태종태세문단세 다음에 뭔가 있었는데... 까먹었네요.~~
+
+하지만 조화로운 커피의 미세한 맛의 기억이, 과연 뭉게지고 희미해지기만 할까요? 
+
+**절대 그렇지 않습니다.**
+
+저는 인간에게는 AI에겐 없는 특별한 힘이 있다고 생각합니다. 그것은 바로, **아름답게 잊는 능력**입니다. 
+
+사람은 잊습니다. 하지만, 그와 동시에 기억을 압축하고, 희미하게 연결해둡니다. 미묘한 커피의 향미에 대한 인상은 사라지지만, 무심코 맡은 비슷한 향기에 우리는 그때 커피를 즐기며 만났던 오래 전 옛 친구에 대해서 떠올립니다. **이것이 바로 인간의 기억이 가진 유연성입니다.**
+
+## AI 에게는 기억이 없다 : Transformer 디코더 아키텍처
+
+<CaptionCenteredImage 
+  imageSrc={robotReadingImage}
+  caption="기계학습은 AI의 모든것이지만, 아이러니하게도 AI는 배우는게 태생적으로 불가능한 존재입니다."
+  imageAlt="기계학습은 AI의 모든것이지만, 아이러니하게도 AI는 배우는게 태생적으로 불가능한 존재입니다."
+/>
+
+**언제부턴가, AI가 똑똑해지기 시작했지 않나요?** 
+
+모든 시발점은 Google이 발표한 단 하나의 논문이었습니다. 
+
+<blockquote>
+[Attention Is All You Need](https://arxiv.org/abs/1706.03762) — 말 그대로 *"프로그램에게 주의집중 만 시키면 AI가 될 것이다"*
+</blockquote>
+
+이 어찌보면 폭력적인 주장은, 이후 전 세계를 LLM 광풍으로 몰아넣었습니다.<sup><a id='cite-ref-1' href='#cite-fn-1' className='inline-link'>1</a></sup><sup><a id='cite-ref-2' href='#cite-fn-2' className='inline-link'>2</a></sup> ChatGPT, Gemini, Sonnet 등 다양한 생성형 AI들이, 이 논문에서 나왔습니다. 
+
+그 원리는 절대 단순하진 않습니다. 하지만, 쉽게 말해보자면 그들은 *"누가누가 더 자연스럽게 글 덧붙이기 잘하나"* 놀이를 시켰다고 볼 수 있겠네요. ~~(?)~~
+
+<CaptionCenteredImage 
+  imageSrc={filmMovieImage}
+  caption="릴레이 이야기 쓰기, 해보신 적 있으신가요?"
+  imageAlt="릴레이 이야기 쓰기, 해보신 적 있으신가요?"
+/>
+
+*"옛날 옛적에..."* → *"...작은 마을에..."* → *"...한 소년이 살았습니다."*
+
+그런데 중간에 어떤 사람이 갑자기 **"그런데 사실 주인공은 요정이었다!"** 라고 중간에 뜬금없이 새 규칙을 만들면 어떻게 될까요?
+
+그 뒤의 사람들은 당황하겠지만, 어쩔 수 없이 그 규칙을 따라야 합니다. 그리고 또 그 규칙에 맞게 **"요정이었던 주인공은 요정의 세계로 돌아갈 수밖에 없었어요."** 하고 안정을 찾아가는 그 느낌.
+
+**왠지 ChatGPT와 우리의 대화 같지 않나요?**
+
+이 과정을 "어텐션(Attention)"이라고 합니다. 각 단어가 서로를 바라보고(Attention!), "너는 내게 이렇게 중요한 거구나" 라는 관계의 강도를 계산하는 거죠.
+
+이것이 바로 논문의 절반이자 전세계를 사로잡고 있는 LLM의 근간 원리, **"Transformer 디코더"** 입니다. 
+
+<blockquote>
+그들은 단순한 **"말 덧붙이기 기계"** 입니다.
+</blockquote>
+
+하지만, 그 **"뒷말"** 의 길이가 백과사전 수십개 분량이기 때문에 마치 기억을 가진 것처럼 행동하는 것이 가능한 것입니다. 그런데, 그럼 이런 의문이 듭니다.
+
+<blockquote>
+  *"뒷말"* 의 길이에는 한계가 있는가? 있다면, 그 한계를 넘은 문장은 어디로 가는가?
+</blockquote>
+
+정답은 명확합니다.
+
+**사라집니다. 완전히.**
+
+## 이야기에는 끝이 있는 법
+
+다시 릴레이 이야기 만들기를 생각해봅시다. 만들던 이야기가 너무 길어져서 *"아, 처음에 뭐라고 썼더라?"* 하고 맨 앞 장을 다시 보려고 해도, 이미 그 페이지는 다른 사람의 손에 넘어가 버리지 않나요? **처음의 그 결정적인 문장은, 더 이상 현재의 이야기 흐름에 영향을 주지 못하는 겁니다.**
+
+이것이 바로 Transformer의 가장 큰 한계, **"컨텍스트 윈도우(Context Window)"** 입니다. AI는 이 윈도우 안에 들어오는 단어들만 서로의 관계를 파악할 수 있습니다. 윈도우를 벗어난 단어는, 마치 책의 첫 페이지를 찢어버린 것처럼, 존재 자체가 무시됩니다. 
+
+**그들은 *"뒷말"* 안의 모든 것을 기억하지만, 그 바깥의 어떤 것도 기억하지 못합니다.**
+
+<CaptionCenteredImage 
+  imageSrc={dataFlowImage}
+  caption="큰 힘에는 큰 대가가 따르죠."
+  imageAlt="큰 힘에는 큰 대가가 따르죠."
+/>
+
+Transformer 아키텍처의 *"주의집중(Attention)"* 은 아름답지만, 엄청난 비용이 듭니다. **단어가 10개면 10x10=100번의 계산을, 100개면 100x100=10,000번의 계산을 해야 합니다.** 그래서 실용적인 이유로, 이 계산 범위를 일정 길이로 제한합니다. 아니, 의도적으로 그 제한된 길이 이상을 처리하지 못하도록 학습시킵니다. 이것이, 오늘날 모든 LLM들이 가진 공통적인 특징입니다.
+
+<blockquote>
+  ***네게 모든 보는 것을 이해하는 권능을 주마. 하지만 내일이 되면, 네가 무엇을 봤는지 조차 잊어먹게 될 것이다.***
+</blockquote>
+
+
+
+
+
+
+<details>
+  <summary>참고자료 | Reference And Citation</summary>
+  <p>
+    <a href="#cite-ref-1" id="cite-fn-1" className='inline-link'>[1]</a>
+    <a href="https://health.chosun.com/news/dailynews_view.jsp?mn_idx=426342&utm_source=chatgpt.com" className='inline-link'>챗GPT, 너의 능력은 어디까지?</a>, 헬스조선
+  </p>
+  <p>
+    <a href="#cite-ref-2" id="cite-fn-2" className='inline-link'>[2]</a>
+    <a href="https://time.com/6238781/chatbot-chatgpt-ai-interview/?utm_source=chatgpt.com" className='inline-link'>AI Chatbots Are Getting Better. But an Interview With ChatGPT Reveals Their Limits</a>, Times
+  </p>
+</details>
