@@ -1,0 +1,38 @@
+---
+interface Props {
+  url: string;
+  image: ImageMetadata;
+  alt?: string;
+  className?: string;
+}
+
+const { url, image, alt = "Image with link", className = "" } = Astro.props;
+import { Image } from "astro:assets";
+---
+
+<a
+  href={url}
+  target="_blank"
+  rel="noopener noreferrer"
+  class="linked-image-wrapper"
+>
+  <Image src={image} alt={alt} class={`linked-image ${className}`} />
+</a>
+
+<style>
+  .linked-image-wrapper {
+    display: block;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .linked-image-wrapper:hover {
+    opacity: 0.9;
+  }
+
+  .linked-image {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem;
+  }
+</style>

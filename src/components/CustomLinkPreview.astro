@@ -1,0 +1,36 @@
+---
+import { LinkPreview } from "astro-embed";
+import LinkedImage from "./LinkedImage.astro";
+
+interface Props {
+  url: string;
+  image?: ImageMetadata;
+  alt?: string;
+  tight?: boolean;
+}
+
+const { url, image, alt = "Preview thumbnail", tight = false } = Astro.props;
+---
+
+{
+  image ? (
+    <div class="overflow-hidden">
+      <LinkedImage
+        url={url}
+        image={image}
+        alt={alt}
+        className={`custom-preview-image ${tight ? "tight" : ""} h-[280px] object-scale-down`}
+      />
+      <LinkPreview id={url} hideMedia />
+    </div>
+  ) : (
+    <LinkPreview id={url} />
+  )
+}
+
+<style>
+  .custom-preview-image.tight {
+    object-fit: scale-down;
+    padding: 1rem;
+  }
+</style>

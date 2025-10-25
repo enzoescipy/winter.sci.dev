@@ -1,0 +1,40 @@
+---
+interface Props {
+  imageSrc: ImageMetadata;
+  imageAlt: string;
+  caption: string | undefined;
+  className?: string;
+}
+
+const { imageSrc, imageAlt, caption, className = "" } = Astro.props;
+
+import { Image } from "astro:assets";
+---
+
+<div class="memory-snapshot">
+  <Image
+    src={imageSrc}
+    alt={imageAlt}
+    class={`max-w-full rounded-lg shadow-md ${className}`}
+    quality={100}
+  />
+  <div class="snapshot-caption">
+    <span>{caption}</span>
+  </div>
+</div>
+
+<style>
+  .memory-snapshot {
+    margin: 2rem 0;
+    text-align: center;
+  }
+
+  .snapshot-caption {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: rgb(var(--color-text-base));
+  }
+</style>

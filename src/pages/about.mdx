@@ -1,0 +1,36 @@
+---
+layout: ../layouts/AboutLayout.astro
+title: "스스로를 만들어나가며, 오늘도 저는 살아갑니다."
+
+---
+import { Image } from 'astro:assets';
+import { LinkPreview } from 'astro-embed';
+
+import auto_sprial from "../assets/images/about/auto-sprial.jpg";
+import astro_boy from "../assets/images/about/astro-boy.jpg";
+
+export const year = (new Date()).getFullYear();
+
+
+학력, 업력, 배경... 저를 설명하는 기존의 틀은 없습니다. 대신, 제가 직접 부딪히고 탐구하며 만들어낸 프로젝트들이 저의 발자취이자 가장 확실한 증명입니다. 제 여정을 설명하려면 이야기가 조금 길어질지도 모릅니다. 😉
+
+
+## 1. 겨울녹 연구소
+<LinkPreview id="https://linktr.ee/wintergreen_lab" />
+- 커피와 과학의 접점을 탐구하는 커뮤니케이션 채널이자 실험실입니다. 단순히 커피를 즐기는 것을 넘어, 과학적 원리를 탐구하고, 그 과정에서 필요한 도구가 있다면 직접 개발합니다.
+- 대표적으로 커피 향미를 체계적으로 기록하고 분석하는 앱, [커피가치 평가할래?](https://winter.sci.dev/posts/developers-view-on-coffee-cva-specialty-and-science/) 를 만들며 사용자들과 소통하고, 앱의 본질과 개발자의 역할에 대해 깊이 고민하는 시간을 가졌습니다
+## 2. (가칭) AR 망원경 프로젝트
+<div class="not-prose grid justify-items-start">
+  <Image 
+    src={astro_boy} 
+    class="sm:w-1/2" 
+    alt="coding dev illustration" 
+  />
+</div>
+<LinkPreview id="https://doi.org/10.8080/1020200165450" />
+- 제게 특허를 안겨주고 개발의 세계로 이끌었던 결정적인 프로젝트입니다. '실내에서도 별을 볼 수 있다면?' 이라는 순수한 호기심은 천문학, 3D 프린팅, 프로그래밍 등 다양한 분야를 넘나드는 학습과 도전으로 이어졌습니다.
+- 이 경험을 통해 복잡한 문제를 해결하기 위해 필요한 기술을 익히고 융합하는 능력을 길렀습니다. 임베디드부터 모바일, 서버, 게임 엔진까지 다양한 분야를 넘나들었습니다.
+
+## 3. 다음은 ...?
+삶을 향한 여정을 떠난 지 **{year - 2002}년** 이 지났습니다. \
+앞으로는 또 어떤 프로젝트들이 저를 정의하게 될까요?

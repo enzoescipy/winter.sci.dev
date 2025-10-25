@@ -1,0 +1,128 @@
+---
+const getRandomHorizontalPosition = () => Math.floor(Math.random() * 100);
+const getRandomVerticalPosition = () => Math.floor(Math.random() * 50);
+const getRandomDelay = () => Math.floor(Math.random() * 5);
+
+const stars = Array.from({ length: 5 }, () => ({
+  top: getRandomVerticalPosition(),
+  left: getRandomHorizontalPosition(),
+  delay: getRandomDelay(),
+}));
+---
+
+<div class="stars-container">
+  {
+    stars.map(star => (
+      <div
+        class="star"
+        style={`--star-top: ${star.top}%; --star-left: ${star.left}%; --fall-delay: ${star.delay}s;`}
+      />
+    ))
+  }
+</div>
+
+<script>
+  let toggleCount = 0;
+
+  // Watch for theme changes
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      if (mutation.attributeName === "data-theme") {
+        toggleCount++;
+
+        // Update star size class when reaching 100
+        const stars = document.querySelectorAll(".star");
+        if (toggleCount >= 100) {
+          stars.forEach(star => star.classList.add("star-huge"));
+        }
+      }
+    });
+  });
+
+  // Start observing theme changes
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+</script>
+
+<style>
+  .stars-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .star {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: rgb(251, 254, 251);
+    border-radius: 50%;
+    box-shadow:
+      0 0 4px rgb(251, 254, 251),
+      0 0 8px rgb(251, 254, 251);
+    opacity: 0;
+    animation: falling 5s linear infinite;
+    top: var(--star-top);
+    left: var(--star-left);
+    animation-delay: var(--fall-delay);
+    transition: all 0.3s ease;
+  }
+
+  .star.star-huge {
+    width: 400px; /* 100 times bigger! */
+    height: 400px;
+    animation: omg 0.2s linear infinite;
+    box-shadow:
+      0 0 400px rgb(251, 254, 251),
+      0 0 800px rgb(251, 254, 251);
+  }
+
+  @keyframes falling {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes omg {
+    0% {
+      transform: scale(1);
+      opacity: 0;
+    }
+    40% {
+      transform: scale(1.4);
+      opacity: 1;
+    }
+    60% {
+      transform: scale(1.6);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  /* Only show stars in dark mode */
+  .stars-container {
+    display: none;
+  }
+
+  :global([data-theme="dark"]) .stars-container {
+    display: block;
+  }
+</style>

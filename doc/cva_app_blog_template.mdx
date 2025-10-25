@@ -1,0 +1,145 @@
+---
+title: "From Cupping to Coding: The Journey of Building a Coffee Value Assessment App"
+description: "A deep dive into the development of an app that bridges the gap between scientific coffee evaluation and practical cupping experiences"
+date: 2024-01-10
+author: winter.sci.dev
+image: 
+  src: "/images/cva-app-hero.jpg"
+  alt: "A smartphone displaying the Coffee Value Assessment app interface alongside a coffee cupping setup"
+tags: 
+  - coffee
+  - development
+  - CVA
+  - Flutter
+---
+
+import { Card } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Icon } from '@astrojs/starlight/components';
+
+# From Cupping to Coding: The Journey of Building a Coffee Value Assessment App
+
+:::note[About the Project]
+The Coffee Value Assessment app is a Flutter-based application that implements and extends the SCA's CVA protocol, providing a structured approach to coffee evaluation while maintaining the nuanced art of coffee tasting.
+:::
+
+## The Genesis of an Idea
+
+<Card title="Personal Connection">
+  What started as regular attendance at coffee cuppings with a supportive coffee shop owner evolved into a mission to bridge the gap between scientific evaluation and sensory experience. The developer, running the [Wintergreen Lab](https://www.instagram.com/wintergreen_lab/) coffee science channel, found themselves at the intersection of scientific precision and practical coffee evaluation.
+</Card>
+
+## Technical Evolution
+
+<Tabs>
+  <TabItem label="Initial Version">
+    ```dart
+    // Basic CVA protocol implementation
+    - Intensity checking
+    - Checkbox checking
+    - Affective pointing
+    - Simple statistics
+    - Timeline rewinding
+    ```
+  </TabItem>
+  <TabItem label="Current Version">
+    ```dart
+    // Enhanced user-focused features
+    - Colorful note dictionary
+    - Detailed flavor profiles
+    - "Reason why" documentation
+    - Sub-hedonic system
+    - Comprehensive data management
+    ```
+  </TabItem>
+</Tabs>
+
+## The Sub-Hedonic System: A Deep Dive
+
+:::tip[Key Innovation]
+The Sub-Hedonic System transforms subjective coffee experiences into structured, meaningful dialogue between cuppers and producers.
+:::
+
+### System Components
+
+1. **Secondary Scoring Layer** <Icon name="star" />
+   - Hierarchical evaluation structure
+   - Detailed attribute breakdown
+   - Support for main scoring decisions
+
+2. **Just-About-Right (JAR) Scale** <Icon name="setting" />
+   - Optimal level assessment
+   - Three-point evaluation system
+   - Objective framework for subjective impressions
+
+3. **Flavor Note System** <Icon name="list" />
+   - Colorful, intuitive interface
+   - Organized taste categorization
+   - Systematic profile building
+
+4. **Contextual Commentary** <Icon name="document" />
+   - Structured feedback system
+   - Clear communication channels
+   - Data-driven discussions
+
+## Development Challenges and Growth
+
+<Card title="Learning Through Publishing">
+  This project represents more than just code - it's a story of personal growth, facing challenges, and learning to balance technical ambition with practical usability. As the developer's first published project, it brought valuable lessons about user expectations and project responsibility.
+</Card>
+
+## Looking Forward
+
+:::caution[Future Considerations]
+The project stands at a crossroads, balancing:
+- Scientific rigor vs. practical usability
+- Expert needs vs. beginner accessibility
+- Feature expansion vs. core functionality
+:::
+
+## Technical Implementation Highlights
+
+```dart
+// Example of the Sub-Hedonic Interface
+class SubHedonicInterface {
+  final _subHedonicRxVO = SubHedonicRxVO();
+  final _jarRxVO = JustAboutRightRxVO();
+  final _noteRxVO = NoteAffecRxVO();
+  
+  // Implementation details...
+}
+```
+
+## About the Developer
+
+<div class="developer-profile">
+  <img src="/images/wintergreen-lab-logo.png" alt="Wintergreen Lab Logo" />
+  <p>
+    Running [Wintergreen Lab](https://www.instagram.com/wintergreen_lab/), a coffee science communication channel, the developer brings a unique perspective to coffee evaluation, combining scientific precision with practical usability.
+  </p>
+</div>
+
+---
+
+:::note[Project Status]
+The Coffee Value Assessment app continues to evolve, with ongoing work on the exterior information section. While development is currently paused for reflection and planning, the project remains a testament to the possibility of bridging scientific coffee evaluation with practical application.
+:::
+
+<style>
+{`
+  .developer-profile {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem;
+    background: var(--sl-color-gray-1);
+    border-radius: 0.5rem;
+  }
+  
+  .developer-profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+  }
+`}
+</style> 

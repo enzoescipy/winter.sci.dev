@@ -1,0 +1,36 @@
+/* Common Link Styles */
+.inline-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--sl-color-accent);
+  text-decoration: none;
+}
+/* Layout Styles */
+.rows {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+/* Text Styles */
+.elevated {
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.elevated.gray {
+  opacity: 0.8;
+}
+
+/* Center Content */
+center {
+  display: block;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+center.tight{
+  margin: 1rem 2rem;
+}

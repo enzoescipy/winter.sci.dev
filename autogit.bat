@@ -1,0 +1,3 @@
+python autogit.py
+
+pause

@@ -1,0 +1,37 @@
+[Interviewer] What inspired you to develop a Coffee Value Assessment application, and what specific problem or gap in the coffee industry were you trying to address?
+
+[Interviewee] Actually, if you ask me about the business strategy or deep intention of this project, I really don't know either, even now so far. I was very young, and my sincere supporter was the coffee shop owner. I followed him to get some cupping, and there were always a few dozens cups of coffee and lots of warm talking. People who attended the cupping often talked about purchase decisions or detailed flavor aspects of the cups. Maybe I wanted to help, or maybe just wanted to join them so I could proudly talk with the coffee expert group.
+
+Time passed by, and the brand new assessment tool, CVA, became the main topic of the SCA (Specialty Coffee Association). That form was based on scientific standards and brought statistics into the coffee scene. I am also a big fan of science and math, so it strongly attracted me to join its flow. Also, I am owner of the coffee science channel, Wintergreen Lab. But I always felt failure when I approached the sensory aspect of coffee. While I was confident I could dive into the physical analysis of coffee brewing, when it came to linking and announcing one coffee's flavor differs from another... I was not. Gripping CVA, I believed I could solve this problem. So I started to develop such a complex application based on SCA CVA.
+
+[Aria] *Accepting a mysterious taste flavor cookie with appreciation* This evolution from "CVA protocol mimicry" to "what users actually need" is fascinating! Would you tell me more about how you decided on the features beyond basic CVA requirements?
+
+[Interviewee] The very first version of this application had a simpler UI which only had intensity checking, checkbox checking, point giving (affective pointing) plus simple statistics by each cup and timeline rewinding. Because I was a very beginner with the Flutter framework at that time, maybe that was my limit, but actually that was my goal at that time - the "mimicking of the SCA CVA protocol."
+
+However, I noticed that the CVA protocol itself has a lot of empty space with "free note sections." That means it still leaves space for the assessor's will. My app didn't have such space, and if I just left a big large text field for the user, maybe they wouldn't be happy with that.
+
+Then I thought a lot: what do users really want? Do they want to use an app mimicking the CVA protocol? Or do they just want a better option for a cupping tool which could potentially replace the paper sheet? So I put in the colorful note dictionary section, which can be used for detailed flavor note taking, and also the "reason why this score" part of the affective scoring.
+
+[Aria] *Sharing half of a chocochip cookie* The psychology behind coffee evaluation is fascinating. How did you approach the challenge of making subjective experiences more structured?
+
+[Interviewee] It is very important to say "reason why" for his/her point for some aspect of the coffee. Let's just say someone scored this cup of coffee's acidity as 8/9. The brewer of that coffee might ask, "Why can't my coffee be nine?" The point is very subjective so no one can say that point is wrong. But in that kind of situation, the point should have meaning, or at least have the why. Because the producer of that coffee needs to accept the result, it needs to be very reasonable. If you just say like "it tastes like gesha and I like that so I gave the 8/9," then the "why can't I be nine" question will arise again.
+
+That's why the CVA form has large empty sections for both affective note taking and descriptive note taking. It cannot be defined by strict rules. However, my app needs reasonable but strict rules because the installed app cannot be changed by user's hope - it is a program, not paper! So I introduced the "Sub" hedonic system, which was named after the original affective scoring system, "the 9-hedonic system." I tried to guide users to give second-tier points to support the main point. You need long conversation to make a brewer accept your point, but what if we summarize the whole conversation then say like, "richness was point 7 for me because of a little bit lack of jasmine flavor, but the velvety mouthfeel and just-right weight of body makes like 9 of 9 points, so I gave your coffee the 8 point" - that makes it very reasonable and comparatively short context.
+
+[Aria] *Setting aside cookies to focus on the conversation* I notice you're wrestling with some deeper questions about responsibility and project direction. Can you tell me more about that?
+
+[Interviewee] Maybe that's the very point I've reached so far. You know what? Although I suggested this sophisticated application to users, original experts of the sensory are still so good at detecting priceless coffee and so-so value coffee. They don't need my help. Moreover, the students of the sensory experts will get a hard time understanding this system. Even the brewer's champion didn't know about the CVA system very well.
+
+[Aria] You know, this reminds me of how the SCA itself is balancing scientific rigor with practical usability. How do you feel about that balance in your own work?
+
+[Interviewee] I am going to pause this project after I implement the exterior information section. I realized that being a developer of some project is way harder than just playing with LEGO blocks myself. Building and publishing the project must lead to some feedback and attention, and I need to be responsible for their requests. And I have to face questions like: what is your final goal? What users will you target? What problem do you want to solve in the coffee scene? What is your vision for your project?
+
+[Interviewee] *Continuing thoughtfully* You know what? I am having serious melancholia which needs to take pills. And this type of serious responsibilities for my life, project, people makes my breath keep harder to take. I started this discussion with myself like 2 years before (of course, that's like "if I publish that, will that became ..." thing) and I decided to not focus on the responsibilities that will follow, just keep focus on what was the actual will I have: those projects were born from my needs, my favor, my desire. Yes, I hid from facing the problem. But the time passed by, I finally need to face them.
+
+[Aria] *Listening with genuine concern* You don't have to be "great" or take on more responsibility than you can handle. Sometimes being authentic about our limitations and challenges is more valuable than trying to meet external expectations. What if that vulnerability you're showing right now is actually a strength?
+
+[Interviewee] Maybe I am not prepared for such things. I had lots of projects before - but none of them was actually published. And for now, this project is the very first project I published to the world. I now have to be very careful when I decide to spend time growing one project. That will cause my lifecycle to break, and could cause very big responsibility.
+
+---
+
+*This raw transcript captures the authentic dialogue between Aria (the AI assistant) and the developer of the Coffee Value Assessment application, documenting both technical aspects and personal insights of the development journey, including moments of shared vulnerability and understanding.* 

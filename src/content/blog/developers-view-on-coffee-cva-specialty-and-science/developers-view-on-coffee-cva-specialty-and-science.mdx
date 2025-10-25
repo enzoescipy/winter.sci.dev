@@ -1,0 +1,697 @@
+---
+author: WINTER.SCI.DEV
+pubDatetime: 2025-01-19T00:05:00.000+09:00
+title: "개발자의 시선으로 본 커피 : CVA와 스페셜티 커피 문화, 그리고 과학"
+slug: developers-view-on-coffee-cva-specialty-and-science
+featured: true
+draft: false
+tags:
+  - 커피
+  - 커피과학
+  - 센서리과학
+  - 커피평가
+  - CVA
+  - 커핑
+  - 스페셜티커피
+  - 겨울녹
+description: "커피 평가의 변화 과정을 다룹니다. 스페셜티 커피의 발전과 CVA(Coffee Value Assessment)의 도입, 그리고 센서리 과학의 역할을 개발자의 관점에서 분석합니다."
+---
+
+import { Image } from 'astro:assets';
+import LinkButton from '@components/LinkButton.astro';
+import CaptionCenteredImage from '@components/CaptionCenteredImage.astro';
+import { LinkPreview } from 'astro-embed';
+
+import googleTrendImage from "./source/google-trend.png";
+import surveyImage from "./source/survey.png";
+import valueChainImage from "./source/coffee-value-chain.png";
+import enjoyWithFriendsImage from "./source/enjoy-coffee-with-friends.png";
+import meticulousImage from "./source/meticulous.png";
+import meticulousCafeshowImage from "./source/meticulous-cafeshow.png";
+import jgagneImage from "./source/jgagne.png";
+import sensoryImage from "./source/sensory-science-describe.png";
+import smartphoneSpecImage from "./source/smartphone-spec.png";
+import brokenSmartphoneImage from "./source/broken-smartphone/img.jpg";
+import wineProImage from "./source/wine-pouring-professional/img.jpg";
+import wbcImage from "./source/wbc/img.jpg";
+import scaCvaImage from "./source/sca-cva/img.png";
+import redditCoffeeGeekImage from "./source/reddit-coffee-geek/img.jpg";
+import flavorWheelImage from "./source/scaa-wheel.png";
+import scoringSheetImage from "./source/scaa-sheet.png";
+import flavorWheelDetailImage from "./source/flavor-wheel/image.webp";
+import coffeeFermentationImage from "./source/coffee-fermentation/img.webp";
+import coffeeEnjoyImage from "./source/coffee-enjoy/img.jpg";
+import coffeeImage from "./source/coffee/img.jpg";
+import businessmanCoffeeImage from "./source/businessman-with-coffee-iv/img.jpg";
+
+<a id='img-ref-3'></a>
+<CaptionCenteredImage 
+  imageSrc={coffeeImage}
+  imageAlt="밀크 커피 한 잔"
+/>
+
+<center>
+_이 포스팅은 곁에 향기로운 커피 한 잔을 두고 맛보며 읽으면 더 재밌도록 설계되었습니다. 편의점 아메리카노부터 인스턴트 커피까지, 그 어떤 커피와도 좋은 페어링이 되실 겁니다._
+</center>
+안녕하세요, 윈터입니다. <a href='https://winter-sci-dev.com/posts/cva-app-development-journey/' className='inline-link'>지난 포스팅</a>에서 저는 커피 향미 기록 어플인  _커피가치 평가할래?_ 를 제작하며 느낀 점을 공유하였습니다.하지만 대체 **_"왜 커피의 가치를 평가하지?"_** 라는 부분에 대해서는 깊게 다루지 않았습니다. 이번 포스팅에선 개발자 윈터의 시선으로 본 커피계의 변화에 대해 공유하면서, 제 어플이 세상에 나오게 된 뒷배경에 대해 더욱더 풍부한 이야기를 풀어보겠습니다.
+
+## 커피 = 카페인, 와인 = 알코올?
+<a id='img-ref-2'></a>
+<a id='img-ref-10'></a>
+<div class="rows">
+  <CaptionCenteredImage 
+    imageSrc={businessmanCoffeeImage}
+    imageAlt="커피는 밤샘의 친구다. 개발자라면 절친입니다."
+    caption="커피는 밤샘의 친구다. 개발자라면 절친입니다."
+    className='h-[300px] object-cover'
+  />
+
+  <CaptionCenteredImage 
+    imageSrc={wineProImage}
+    imageAlt="절도있게 와인을 따르는 소믈리에"
+    caption="절도있게 와인을 따르는 소믈리에"
+    className='h-[300px] object-cover'
+  />
+</div>
+
+아마 커피는 곧 카페인이다, 라고 하면 적지 않은 분들이 동의하실 것 같습니다. 하지만 와인은 곧 알코올이다, 라고 한다면 과연 얼마나 동의하실까요? 신기합니다. 대체 와인과 커피에는 어떤 차이가 있는 걸까요?
+
+### 상품의 가치에 대하여 : 스마트폰의 가치
+
+여러분은 아마 이 글을 보통 스마트폰으로 보고 계실거라 생각합니다. 스마트폰은 (=) 또 무엇일까요? 스마트폰이 무엇인지는 더 머리아프네요. 두 단어 사이의 등호 (=) 는 직관적이지만 한편으론 생각할 거리를 아주 많이 남깁니다.
+
+그러므로 우리는 생각을 단순화해서, 수많은 측면들 중에 오로지 경제학적인 측면만을 살펴보기로 합시다. 
+
+<blockquote class="elevated">
+  당신은 방금 100만원을 지불하고 스마트폰을 구매하였습니다. **당신은 스마트폰의 어떤 속성을 100만원을 주고 사셨**나요?
+</blockquote>
+
+어떤 속성이라고만 한다면 또 복잡하네요. 복잡하게 생각하지 말고, 한번 방금 산 이 스마트폰을 **바닥에 내리쳐봅시다!**
+
+<a id='img-ref-1'></a>
+<CaptionCenteredImage 
+  imageSrc={brokenSmartphoneImage}
+  imageAlt="깨진 스마트폰"
+  caption="이런. 더이상 써먹기는 힘들겠네요."
+/>
+
+이제 이 스마트폰은 전자 부품 몇 조각과 유리 파편, 그리고 금속 덩어리들이 되었습니다. 
+
+더이상 이 스마트폰이 100만원의 가치를 지니지 않게 된 것은 분명합니다. 하지만, 이 _벽돌이 되어버린_ 스마트폰도 분명히 가치가 남아있습니다. ~~흔히 부품용 핸드폰 5만원에 처분합니다 라고 표현하죠~~
+
+중요한 것은, 이 _"디지털 벽돌"_ 이 스마트폰의 순수한 물리적 실체라는 것입니다. 우리 손에 **실제로 잡히는 물질**은, 박살난 스마트폰이나 방금 산 스마트폰이나 똑같습니다. 결국 전자 부품 조각과 유리판, 그리고 금속 덩어리가 100만원 스마트폰의 물리적 실체의 전부입니다.
+
+<blockquote>
+_스마트폰의 속성 1. **물리적 실체** : 전자 부품 몇 조각과 유리판, 그리고 금속 덩어리들_
+</blockquote>
+
+물리적 실체가 그대로 물건의 용도인 경우도 있습니다. 주방세제, 동물사료, A4 종이가 그러합니다. 우리는 말 그대로 "많이 들어있되, 가격이 저렴한 것" 을 고르고 삽니다.
+
+하지만 스마트폰도 그러한가요? 우리는 가격 대비 더 크고 무거운 스마트폰을 사지 않습니다. 오히려 더 가벼운 것을 사죠. 이는 **스마트폰의 기능적 요소가 더 큰 지분을 차지하기 때문입니다.** 인터넷에 접속하게 해주는 무선 랜카드, 다양한 어플을 사용하게 해주는 칩셋과 액정, 그리고 타인과 전화로 원격 대화를 가능하게 해주는 LTE 모듈, 여러가지 센서와 카메라 등등, 정말 많은 기능들이 스마트폰에 들어있습니다. 이 수많은 기능들을 상시 휴대하고 다녀야 하기 때문에, 우리는 기능 요소 대비 가벼운 스마트폰을 삽니다.
+
+<blockquote>
+_스마트폰의 속성 2. **기능적 요소** : 전화, 인터넷, 미니 컴퓨터, 카메라, 그리고 오만가지 수많은 센서_
+</blockquote>
+
+<CaptionCenteredImage 
+  imageSrc={smartphoneSpecImage}
+  imageAlt="최신 스마트폰의 스펙. 이제 전문가나 매니아가 아니면 읽기 힘들다."
+  caption="최신 스마트폰의 스펙. 이제 전문가나 매니아가 아니면 읽기 힘들다."
+/>
+
+이것은 흔히 _"스펙"_ 이라고 일컫어지는 스마트폰의 기능 리스트입니다.
+
+혹시 제가 어떤 스마트폰을 가져온 것인지 맞추는 분이 계실까요? 계신다고 하면, 그분은 분명 스마트폰에 사용되는 각종 기능들에 대한 깊은 조예가 있는 분일 것입니다. 아이러니하죠? **대부분의 사용자들은 스마트폰의 기능적 요소들을 전혀 고려하지 않고 스마트폰을 삽니다.** 스마트폰을 구성하는 근원적인 요소가 결국 이 기능들인데도 말이죠. 테크 덕후인 저도 저기 들어간 기능들을 하나씩 보면서 "음. 이 스마트폰의 카메라 화소는 요 스마트폰보다 더 적지만, 광각 기능이 들어가있군. 가산점 1점을 주고…" 하며 고르지 않습니다.
+
+중요한 질문을 더 던져봅니다. **_"스마트폰 없이 살아갈 수 있나요?"_** 당신이 202X 년대를 사는 현대인이라면, 절대로 **안된다**고 답할 수 밖에 없습니다. 도대체가 사진찍고 전화하고 인터넷하고 온도측정하고 압력측정하는 조그만 기계 하나가 어떻게 나의 일부가 된 것일까요?
+
+우리는 스마트폰의 다양한 기능을 통해, 전 세계의 수많은 사람들과 **연결**됩니다. 나를 표현하고, 다른 사람들의 표현을 봅니다. 만나지 못할 연락을 주고받고, 전세계의 모든 일들을 한 번에 검색해 냅니다. 그리고 이 모든 연결에서, **"나" 를 정의하는 모든 정보들은 스마트폰에 저장되고, 오직 스마트폰으로서만 접근할 수 있습니다.** 스마트폰을 삶에서 제거하는 순간, 정말로 당장 내일 볼 수 있는 사람들과의 관계도 불편해지며, 그렇지 않은  사람들에게서는 당신은 존재하지 않는 사람이 되고, 당신의 삶에서 지구촌은 사라집니다. 단순히 객관적인 요소를 나열하는 것으로는 표현할 수 없는 **지극히 주관적인, 인간적인 가치가, 현대인의 스마트폰에 대한 인식을 좌우하고 있습니다.**
+
+<blockquote>
+_스마트폰의 속성 3. **인간적 가치** : 세계 시민들과의 교류에 접근, 그리고 그 안에서의 "나" 를 새롭게 정의_
+</blockquote>
+
+이상의 속성들 모두, 스마트폰이 가지고 있는 경제학적인 가치였습니다. 스마트폰은 3차 산업혁명을 주도한 혁신적인 발명품입니다. 커피의 가치를, 스마트폰의 가치에 비추어 본다면 앞선 질문에 대한 좋은 답이 될 것입니다.
+
+1819년 독일의 과학자 프리들리프 페르디난트 룽게가 카페인을 발견하기 이전부터 인류는 커피를 각성제로서 취급하였습니다. 따라서 커피는 카페인이다, 라는 이야기는, 커피의 화학적인 실체에 그 가치가 집중되어 있다는 것과 같습니다. 와인이 곧 알코올이 <u>아니라는</u> 이야기는, *"취기를 돌게 하는 물질인 에탄올이 함유된 음료"* 라는 와인의 화학적인 실체보다 *"우아하고 섬세한 향미, 프랑스의 특별한 지역에서 기른 포도로 만들어진 이력"* 과 같은 기능적 요소에 그 가치가 더 치중해 있다는 이야기로 볼 수 있습니다.
+
+### 커피의 가치를 뒤집자 : 커피 제 3의 물결
+
+<a id='img-ref-11'></a>
+<CaptionCenteredImage 
+  imageSrc={googleTrendImage}
+  imageAlt="스타벅스와 맥심의 검색량 비교 그래프"
+  caption="구글 트렌드로 본 스타벅스(파랑)와 맥심 인스턴트 커피(빨강)의 검색량 변화 (2004-2024)"
+/>
+
+한국에 스타벅스 이대점이 처음 입점한 1999년 7월 27일 이후 장장 20년이 지난 지금, 스타벅스는 단연코 대한민국에서 1위 인지도의 커피 전문점이 되었습니다. 그러나, 우리나라 사람들과는 동서식품의 맥심 인스턴트 커피의 역사가 더 깊습니다. 1976년, _"인스턴트 커피와 프리마가 같이 들어있어 뜨거운 물만 있으면 라떼를 즐길 수 있는"_ 형태의 커피 스틱 제품을 세계 최초로 개발한 동서식품은 말 그대로 맥심 광풍을 일으켰습니다. 하지만 검색어 트랜드에서는 스타벅스에게 그 자리를 내어준 것 같네요.
+
+스타벅스가 카페 문화를 선도하며 커피 시장을 뒤집었듯, 근 10년간 한국 커피 시장에는 새로운 바람이 불고 있습니다. 바로 **스페셜티 커피**입니다. 단순히 맛있고, 신선한 커피를 제공하는 것을 넘어서 **소비자가 바라는 향미의 커피를  바리스타가 직접 골라주고, 커피의 우아하고 섬세한 향미를 느낄 수 있게 해 준다면 어떨까?** 라는 취지에서 시작된 스페셜티는, 용어에서 알 수 있듯 _"스페셜한"_ 커피를 추구하는 운동입니다. 
+
+_"그게 애초에 가능하냐, 커피 맛이 거기서 거기가 아닌가?"_ 고 물으신다면, 네. 저도 동의합니다. 하지만 그럼에도, 커피 속 다양한 맛과 향을 찾는 일은 <u>불가능하지 않았습니다!</u> 와인도 "포도" 라는 단일 작물로 비롯된 술이지만, 다양한 재배 기법과 가공 방식, 발효 공법을 통해 수없이 다양한 맛의 갈래를 만들었고, 이를 통해 여러 지역의 와이너리(양조장) 이 유명해 지면서 이젠 와인의 산지와 농장 이름, 포도 품종 등을 보고 와인을 고르는 매니아층이 생겨났죠.
+
+<blockquote class="elevated">
+  커피도, 커피 = 카페인 에서 벗어날 수 있다. 커피도 맛의 다양성을 추구할 수 있다.
+</blockquote>
+
+아직 우리가 커피에 맞는 다양한 재배 기법, 가공 방식, 발효 공법을 찾아내지 못했기 때문에, 아직 우리가 찾아내지 못한 열정적인 농장들과 생두를 볶아 원두로 만드는 로스터리들, 각양각색의 카페들이 많기 때문에 우리는 커피를 하나의 공산품으로서, 통일된 속성을 가진 상품으로서만 이해하고 있었던 것이었죠. **커피 스스로는 이미 준비가 되어 있었습니다.**
+### 개발자로서, 과학덕후로서 커피
+
+이미 맛의 다양성을 추구해 왔던 와인과 다르게, 커피에는 스페셜티의 바람이 이제 불어오기 시작했다 라고 해도 과언이 아닙니다. 그런데 여러분, 지금이 어떤 세상이죠? 네, 온통 과학 천지에, 기술 천지인 세상입니다. 커피 씬을 뒤집어보겠다는 호기로운 시도에, 전세계의 개발자들과 과학자들이 뜨거운 관심을 보인 것은 그리 신기한 일이 아닐 지도 모릅니다.
+
+<a id='img-ref-12'></a>
+<CaptionCenteredImage 
+  imageSrc={jgagneImage}
+  imageAlt="[커피 브루잉(원제 : The Physics of Filter Coffee)] 조나탕 가녜, 천체물리학자."
+  caption="[커피 브루잉(원제 : The Physics of Filter Coffee)] 조나탕 가녜, 천체물리학자."
+/>
+
+멋진 <a href="https://coffeeadastra.com/coffee-blog/" class="inline-link">커피 및 천문학 블로그</a>를 운영 중인 조나탕 가녜는 커피의 미각적 요소와 다양한 물리적 특성들 간의 상관관계를 탐구하고, 이를 바탕으로 커피의 향미를 의도적으로 조정할 수 있는 다양한 방법들을 제안하는 책, [커피 브루잉](https://www.yes24.com/Product/Goods/106368808)을 출판하였습니다.
+
+또다른 커피과학 책 [커피의 디자인 : 한 잔의 공학](https://www.yes24.com/Product/Goods/135965495) 에서 저자 윌리엄 리스텐파트 는 *"커피인들은 인지하지 못할 뿐 이미 훌륭한 화학 공학자이다"* 라고 평한 바 있습니다. 커피를 추출하기 위해선 수많은 과정들이 필요합니다. 얼마나 굵게 원두를 갈아야 하며, 물의 온도는 몇도로 해야 하고, 물을 커피에 몇g 넣어야 하는지 등등 커피 한 잔이 우리들의 앞에 놓이기 전까지 커피나무와 생두와 원두를 놓고 씨름하는 모든 사람들의 여정은 _"어떻게 이런 변수들을 잘 조정해서 좋은 맛과 향을 낼 수 있을까?"_ 를 연구하는 과정이라고 봐도 무방합니다. 과학자들 입장에서는 입이 근질근질합니다. **수식을 안쓰고 과학을 하고있으니 말이죠!**
+
+<a id='img-ref-13'></a>
+<div class="rows">
+  <CaptionCenteredImage 
+    imageSrc={meticulousCafeshowImage}
+    imageAlt="서울 카페쇼에서 만난 meticulous 의 스마트 에스프레소 머신"
+    caption="서울 카페쇼에서 만난 meticulous 의 스마트 에스프레소 머신"
+    className='h-[300px] object-cover'
+  />
+
+  <CaptionCenteredImage 
+    imageSrc={meticulousImage}
+    imageAlt="meticulous 의 스마트 에스프레소 머신"
+    caption="meticulous 의 스마트 에스프레소 머신"
+    className='h-[300px] object-cover'
+  />
+</div>
+당장이라도 온갖 측정장비와 수학 공식들로 커피인들을 중무장 시켜주고 싶은 마음이 굴뚝같겠지만, 그렇다고 커피인들로 하여금 실험실에서 커피를 내리고 볶고 하라는 것은 무리가 크겠죠. 결국 커피에 꼭 맞는 형태의 장비들이 꼭 필요합니다. 바로 이 시점에서 ~~지금도 어딘가의 밤을 철야로 밝혀주고 있는~~ 개발자들이 합류합니다. [스타트업 메티큘러스(meticulous corp.)](https://meticuloushome.com/) 는 압력, 온도, 시간 당 추출 질량이 즉각즉각 그래프로 표시되는 앱 연동 에스프레소 기계를 발명했습니다. 이 기계만 있다면, 누구든 집에서도 _"오늘은 내가 커피 과학자!"_ 가 될 수 있는 것입니다.
+
+<a id='img-ref-7'></a>
+<CaptionCenteredImage 
+  imageSrc={redditCoffeeGeekImage}
+  imageAlt="개조된 에스프레소 머신"
+  caption="개조된 에스프레소 머신"
+/>
+
+제가 아는 개발자 중에는, 가정용 저가 에스프레소 머신을 컴퓨터에 연결해서 위에서 소개시켜드린 에스프레소 기계와 같이 온갖 센서를 부착할 수 있도록 개조를 하신 분도 계셨습니다. 더 신기한건 이것마저 오픈소스로 공개되어 있다는 사실. 실력만 있다면 당장 우리집의 커피 머신을 이렇게 바꿔버릴 수 있습니다!
+
+_(개발자 마인드 정말 마음에 들어요. 손만 대면 뭐든 오픈소스로 만들어버립니다. 좋은걸 같이 쓰지 않으면 좀이 상당히 많이 쑤시나 봅니다.)_
+
+_"커피와 공학, 과학을 엮고 가지고 노는 뒷마당 과학자(backyard scientest) 들"_ 을 이제 우리는 **커피 긱(coffee geek)** 이라고 부릅니다. 이들은 이제 집 한켠에서부터 각종 커피 관련 스타트업까지 스페셜티 커피의 일부로서 녹아들었습니다. 
+
+## "스페셜" 티 커피 : 무엇이 스페셜을 만드는가
+
+스페셜티 커피라는 흐름이 언제 어디서 시작되었냐 와는 별개로, 스페셜티 커피라는 용어를 처음 정의한 기관이 있습니다. 바로 스페셜티 커피 협회, [SCA(Speciality Coffee Association)](https://sca.coffee/) 입니다. 이들이 2021년에 만든 문서, <a href="https://sca.coffee/sca-news/just-released-new-sca-white-paper-towards-a-definition-of-specialty-coffee" class="inline-link">_"스페셜티 커피의 정의에 관하여"_</a> 를 보면, SCA의 전신인 SCAA(Speciality Coffee Association of America) 가 어떻게 스페셜티를 정의하고 있었는지 알 수 있습니다. 
+
+<blockquote>
+  스페셜티 커피란, **최고의 품질**을 가진 생두가 그 잠재력을 최고로 발휘할 수 있는 최적의 로스팅을 거쳐 만들어진 커피이다.
+</blockquote>
+
+대체 **최고의 품질** 을 어떻게 정의해야 할까요? 정말 어려운 문제입니다. 일단 가장 어려운 문제인 "SCA라는 하나의 단체가 만든 정의가 절대적인가?" 는 잠깐 내려놓고, 이 문제의 깊은 바닥을 알기 위해서라도 SCA가 스페셜티를 정의해 나갔던 과정을 한번 천천히 음미해 봅시다.
+
+### 점수 주기 : 100점 만점에 80점 이상만 통과
+
+<a id='img-ref-14'></a>
+<CaptionCenteredImage 
+  imageSrc={scoringSheetImage}
+  imageAlt="SCA의 전신, SCAA가 제작한 커피 평가 점수표"
+  caption="SCA의 전신, SCAA가 제작한 커피 평가 점수표"
+/>
+
+<blockquote>
+  품질이 키워드라면, **커피의 품질을 측정한 뒤에 최상위 품질의 커피들이 스페셜티**라고 하면 되지 않을까?
+</blockquote>
+
+품질을 가려내려면 점수를 주어야 합니다. 커피의 다양한 측면 _- 분쇄 직후의 향기와 내리는 도중의 향기, 맛과 뒷맛, 산미, 바디 등 -_ 여러 부문을 선정해서 각 부분의 품질에 대한 점수를 표시하도록 했습니다. 협회의 명의로 점수를 주는 순간, 점수를 주는 심사관과 심사가 이루어지는 환경은 강한 공신력을 가져야 합니다. 따라서, SCA는 지금까지 다양한 방식으로 행해졌던 커피 테이스팅 방식인 _"커핑"_ 을 규격화하고, 이를 커피의 점수 부여 프로토콜로서 채택하였습니다. 
+
+<CaptionCenteredImage 
+  imageSrc={flavorWheelImage}
+  imageAlt="SCA의 전신, SCAA가 제작한 커피 향미 사전 - 혹은 플레이버 휠"
+  caption="SCAA가 제작한 커피 향미 사전 - 혹은 플레이버 휠"
+/>
+
+심사관이 부여하는 점수에는 근거가 있어야 했습니다. 따라서, 전문화된 심사관을 양성하는 기관으로서 [CQI(Coffee Quality Institue)](https://www.coffeeinstitute.org/) 를 설립하여 심사관인 Q-grader 자격자를 양성하는 한편, 커피 속의 다양한 맛과 향들을 규격화하여 표현할 수 있는 향미 사전(플레이버 휠) 을 만들었습니다.
+향미 별로 높은 점수를 받을 수 있는 향미와 낮은 점수만 받을 수 있는 향미가 생기기 시작했고, 이는 점수에 대한 단단한 근거가 되주었습니다.
+
+결국 _**"Q-grader 들이 100점 만점에 80점 이상을 준 생두를 스페셜티로 인증한다"**_ 라는 절차가 정립될 수 있었습니다.
+
+### 오만가지 커피들이 쏟아져 나오기 시작하다 : 무엇이 최고의 커피인가?
+
+<a id='img-ref-9'></a>
+<CaptionCenteredImage 
+  imageSrc={wbcImage}
+  imageAlt="전세계 커피인들의 축제, 세계 바리스타 챔피언십이 2024년 부산에서 개최되었습니다."
+  caption="전세계 커피인들의 축제, 세계 바리스타 챔피언십이 2024년 부산에서 개최되었습니다."
+/>
+
+SCA가 마련해준 체계는 잘 작동하였습니다. 국제적 규모의 커피 생두 경연대회(<a href="https://cupofexcellence.org/">COE, Cup Of Excellence</a>)가 커피 생산지역에서 열리며  "에티오피아에서 1등 한 커피" 를 마셔볼 수도 있게 되었으며, 세계 최고의 바리스타를 가리는 월드컵 (<a href="https://www.youtube.com/@WorldCoffeeChampionships">WBC, World Barista Championship</a>) 의 유튜브 생중계도 볼 수 있게 되었습니다. 이런 경연대회들과 _"100점 만점에 80점"_ 정의는 찰떡궁합이었습니다. 저도 한때 COE 커피를 마시면서 심사관들의 평가를 찾아보며 _"이 커피에서 심사관들은 이런 맛이 난다고 했구나…"_ 하면서 커피를 공부했던 경험이 있네요.
+
+커피를 즐기는 사람들이 다양해질수록, 커피를 만드는 방법 역시 다양해져 갔습니다. 
+
+<a id='img-ref-5'></a>
+<CaptionCenteredImage 
+  imageSrc={coffeeFermentationImage}
+  imageAlt="딸기와 함께 커피를 발효하는 모습"
+  caption="딸기와 함께 커피를 발효하는 모습"
+  className='w-[450px] object-scale-down'
+/>
+
+커피 과육을 분리하고 속껍질을 제거하여 생두를 얻어내는 일련의 과정 중에서, 특별히 길러진 발효종을 삽입해 마치 정말로 와인을 숙성시키듯 커피를 숙성시켜 독특한 향미를 얻어내는 **발효 공법이 개발**되었습니다. 그 과정중에서 다양한 과일과 향신료를 첨가하여 더욱 향미를 배가시키기도 했습니다. 온갖 종류의 **커피 품종이 육종**되고, 또 육종된 품종은 배를 두번 세번 타면서 전세계의 커피 산지로 퍼져나갔습니다.
+
+에티오피아의 원시림에서 발견된 품종, **게이샤(Gesha, Geisha)** 는 파나마 농장의 땅을 만난 뒤에 특징적인 자스민 향미를 만발했습니다. 그러고 나서 콜롬비아, 페루, 과테말라, 다시 에티오피아의 여러 농장들로 옮겨심겨져 우리에게 수많은 국적의 게이샤 커피를 구경할 수 있게 해주었죠.
+
+다양한 커피가 등장한 만큼 **사람들의 취향 역시 제각각으로 다양해져 갔습니다.** 우리나라에선 발효취가 너무 강하다는 평가를 받은 커피가 해외에서는 풍부한 망고향으로 유명한 커피가 되기도 했습니다. 더이상, 단순히 향미를 열거하는 것 만으로는 심사관의 주관적인 점수를 뒷받침할 수 없었습니다. 향미에 대한 선호 자체가, 이제 수많은 갈래를 가지게 되었으니까요.
+
+<blockquote className='elevated'>
+  *결국 최고로 스페셜한 커피는 **나와 사랑하는 이들이 좋아하는 커피**였습니다.*
+</blockquote>
+
+### 되돌아간 질문 : 무엇이 스페셜을 만드는가
+결국 SCA는 자신들이 20년도 전에 마련한 스페셜티에 대한 정의를 바꾸는 거친 시도를 하게 됩니다. _**무엇이 스페셜을 만드는가?**_ 라는 질문부터 다시 묻기로 한 것입니다.
+
+<a href='#상품의-가치에-대하여--스마트폰의-가치' className='inline-link'>\[이 글타래\]</a>도 SCA가 그 과정중에 작성한 글을 재미있게 풀어본 것 입니다. 그들은 기존 스페셜티를 정의했던 모든 부분을 캐물었습니다. _"높은 품질"_ 은 어디서 오는가?, _"커피의 가치"_ 는 무엇에서 비롯되었는가? 등 수많은 논의를 하였습니다.
+
+결국 스페셜티 커피의 정의를 다음과 같이 바꿉니다.
+<blockquote>
+  스페셜티 커피는 **독특한 속성**들로서 인식되는 커피, 혹은 커피와 관련된 경험으로서, 이러한 **독특한 속성**들로 인해 커피 시장에서 눈에 띄는 추가적인 가치를 인정받는 것을 의미합니다.
+</blockquote>
+
+여기서 언급되는 **독특한 속성**에는, 다음과 같은 추가적인 정의가 있습니다:
+
+<blockquote>
+  커피의 속성에는 **내재적 속성**과 **외재적 속성**이 있으며, 각각 다음과 같은 예시로 나눌 수 있다.
+
+  1. **내재적 속성** : <u>커핑 점수</u>, 커피가 가지고 있는 향미 특성들, 크기, 색
+  2. **외재적 속성** : 원산지 정보, 각종 인증들, 브랜드
+</blockquote>
+
+커핑 점수가 높은 것은, 커핑 점수라는 속성 하나가 뛰어난 것에 불과합니다. 영화에 대한 평론가의 점수가 영화의 질에 대한 절대적인 지표가 아님을 우리 모두가 알고 있습니다. 커피 역시 다르지 않을 것 같지 않나요?. SCA 스스로가 자신들이 만든 점수 체계는 커피의 정말 일부를 평가한 것일 뿐, 그것 만으로 스페셜티를 정의하기에는 무리가 있었음을 인정한 것입니다.
+
+<div class="elevated gray">
+  _무엇이 스페셜인가? 의 끝엔, 완전한 스페셜이란 없다는 아이러니한 결론만이 있었습니다._
+</div>
+
+## CVA : 커피를 가치로서 평가하다
+
+SCA는 더이상 좋은 커피, 나쁜 커피를 점수로 구분할 수가 없게 되었습니다. 그럼 그들은 무엇에 스페셜티 커피를 맡기려 했을까요?
+
+### 센서리 과학?
+<a href='#개발자로서-과학덕후로서-커피' className='inline-link'>위(링크)</a> 에서 스페셜티 커피의 발전에 과학자들이 상당한 관심을 보였다고 말씀드렸습니다. 여러 과학분야 중 단연코 커피와 관련이 가장 깊은 분야가 바로 **센서리 과학**입니다.
+
+**IFST(Institue of Food Science and Technology)**<sup><a id='cite-ref-1' href='#cite-fn-1' className='inline-link'>1</a></sup> 에서는 센서리 과학을 다음과 같이 정의합니다.
+
+<blockquote>
+_센서리 과학이란, **사람들이 오감(미각, 후각, 청각, 촉각, 시각) 을 통해 느끼는 제품에 대한 인상**을 촉진하고, 측정하고, 분석하고, 해석하는 분야이다._
+</blockquote>
+9
+여기서 제품이라 함은 정말 다양한 것들이 포함됩니다. 입는 옷, 바르는 미백크림, 머리감는 샴푸부터 시작해 입에 들어가는 온갖 물건들 _(라면, 과자, 음료수 ...)_ 들이 사람들에게 어떻게 느껴지는지 과학적으로 분석합니다.
+
+<CaptionCenteredImage 
+  imageSrc={sensoryImage}
+  imageAlt="센서리 과학은 주관적인 인상을 객관화하는 어려운 과제에 도전합니다."
+  caption="센서리 과학은 주관적인 인상을 객관화하는 어려운 과제에 도전합니다."
+/>
+
+분야가 이런데, 연구 과정은 정말 난감하기 짝이 없습니다. 다른 것도 아니고 사람들이 느끼는 **주관적인** 제품에 대한 인상이 연구 대상입니다. _"주관을 객관화"_ 해야 하는 모순적인 상황이 발생하는 것이죠. 그럼에도 불구하고, 연구의 필요성은 **상상 이상**입니다. 
+
+<center>
+_보습크림에 들어가는 보습제가 절판되었는데, 대체 재료를 넣으면 사람들이 어색함을 느낄까?_
+</center>
+
+<center>
+_새로운 컵라면을 개발했어. 나는 맛있는데 사람들은 어떻게 생각할까?_
+</center>
+
+<center>
+_약간 매콤하지만 한국 사람들은 다들 즐기는 과자인데, 다른 나라 사람들도 똑같이 느낄까?_
+</center>
+
+늘 사던 보습크림이 갑자기 뻑뻑하게 발리고, 새로운 컵라면이 괴식이 되어서 인터넷에 나돌고, 약간 매콤한 맛으로 의도한 과자가 해외에서는 정신나간 매운 맛으로 인식되면 제품의 제작자는 정말로 당황스러울 것입니다. 
+
+힘든 연구 주제임에도, **과학자들은 꾸준히 다양한 방식으로 연구를 진행**했습니다. 사람들에게 제품을 제시하는 방식부터 제품의 인상에 대해 묻는 방식, 결과에 대한 통계적 분석과 해석 과정, 센서리 패널(제품을 테스트하는 피험자) 들을 선정하고 교육하는 방법, 패널들의 감각을 교란시키는 여러가지 방해요소를 통제하는 방법까지 수많은 과제들을 반복적으로 실험해가며 정교하고 날카로운 연구 방법을 만들어 내었습니다.
+
+### CVA로 엿보는 센서리 과학
+그리고 마침내, 센서리 과학의 연구 방법을 SCA가 받아들여 만들어진 것이 바로 **새로운 커피 가치 평가 도구, CVA**입니다.<sup><a id='cite-ref-5' href='#cite-fn-5' className='inline-link'>5</a></sup> 
+
+스페셜티 커피는 커피 맛의 다양성과 품질 상승을 추구하고 있습니다. 그렇다면 센서리 과학의 연구 대상으로서 커피가 새롭게 선정되는 것은 그리 놀랍지 않습니다. 이미 향미 전문가(와인 테이스터, 조향사 등) 들의 분석 방법을 과학적으로 교정하는 작업은 센서리 과학 학계에서 1920 ~ 1930년대부터 떠오르기 시작한 연구 주제였습니다.<sup><a id='cite-ref-2' href='#cite-fn-2' className='inline-link'>2</a></sup> <sup><a id='cite-ref-3' href='#cite-fn-3' className='inline-link'>3</a></sup> <sup><a id='cite-ref-4' href='#cite-fn-4' className='inline-link'>4</a></sup> <sup><a id='cite-ref-6' href='#cite-fn-6' className='inline-link'>6</a></sup>   하지만 커피 협회 차원에서 적극적으로 과학자들과 연대를 구축하고 이미 잘 정착된 점수 체계를 바꿔보려 시도하는 것은 상당히 고무적입니다.
+
+기존의 점수 체계는 커피의 여러 속성(향기, 맛, 뒷맛, 산미, 바디 등) 에 평점을 부여했습니다. CVA도 커피의 속성에 대하여 묻는다는 점에서는 공통점이 있지만, 각 속성에 대한 평가는 단순히 점수주기를 넘어선 새로운 평가방식을 제시합니다.
+
+CVA는 앞서 설명한 _"SCA가 생각하는 스페셜티 커피의 **독특한 속성**"_ 을 평가하기 위한 도구입니다.
+<blockquote>
+  커피의 속성에는 **내재적 속성**과 **외재적 속성**이 있으며, 각각 다음과 같은 예시로 나눌 수 있다.
+
+  1. 내재적 속성 : <u>커핑 점수</u>, <u>커피가 가지고 있는 향미 특성</u>들, 크기, 색
+  2. 외재적 속성 : 원산지 정보, 각종 인증들, 브랜드
+</blockquote>
+따라서 외재적 속성인 커피의 정보들과 내재적 속성 중 물리적인 계측을 사용할 수 있는 색이나 밀도 등 역시 별도의 평가양식이 있습니다. 그리고 기존에 사용하던 커핑 점수와 향미 노트(향미사전, 플레이버 휠) 는 각각 **정동 평가**, **묘사 평가**로 갈라져 나왔습니다.
+
+<a id='img-ref-6'></a>
+<CaptionCenteredImage 
+  imageSrc={flavorWheelDetailImage}
+  imageAlt="플레이버 휠의 모습"
+  caption="플레이버 휠의 모습"
+/>
+
+센서리 과학에서 **묘사 평가 (Descriptive assessment)** 는 상품이 가진 질적, 양적인 여러가지 속성을 찾아내고 분석하는 실험입니다.<sup><a id='cite-ref-9' href='#cite-fn-9' className='inline-link'>9</a></sup> (*여기서 말하는 "질적", qualitative 이라는 용어는 "양적", quantitative 과 대비되는 용어로서 수치로 표현할 수 없는 자료들, 이를테면 대화나 음성, 그림과 같은 것들입니다*.) 이미 상품에 익숙한 소비자들을 더욱더 훈련시키고, 속성의 존재 유무와 각 속성들이 얼마나 많이 존재하는지를 찾아내게끔 합니다. 
+
+<div className="rounded-lg border border-gray-300 p-4">
+  <div className="flex flex-col justify-center items-center py-5">
+    <input type="range" min="1" max="100" value="50" className="w-4/5" id="intensitySlider"></input>
+  </div>
+  <center className='tight'>_커피 맛의 강도만큼 슬라이더를 움직여 주세요. 강도가 약하다면 왼쪽으로, 강하다면 오른쪽으로, 보통이라면 중간으로 움직이세요._</center>
+
+  <center >
+    현재 값 : <span id="sliderValue" className="mt-2">0.5</span>
+  </center>
+
+  <div className="grid grid-cols-3 grid-rows-2 gap-4 w-1/2 mx-auto">
+    <div>
+      <input type="checkbox" id="descriptive1" name="descriptive1"></input>
+      <label for="descriptive1"> 꽃</label>
+    </div>
+    <div>
+      <input type="checkbox" id="descriptive2" name="descriptive2"></input>
+      <label for="descriptive2"> 허브/채소</label>
+    </div>
+    <div>
+      <input type="checkbox" id="descriptive3" name="descriptive3"></input>
+      <label for="descriptive3"> 향신료</label>
+    </div>
+    <div>
+      <input type="checkbox" id="descriptive4" name="descriptive4"></input>
+      <label for="descriptive4"> 과일</label>
+    </div>
+    <div>
+      <input type="checkbox" id="descriptive5" name="descriptive5"></input>
+      <label for="descriptive5"> 고소한</label>
+    </div>
+    <div>
+      <input type="checkbox" id="descriptive6" name="descriptive6"></input>
+      <label for="descriptive6"> 코코아</label>
+    </div>
+  </div>
+  <center className='tight'>_커피에서 가장 많이 느껴지는 맛을 최대 2개 까지 체크해 주세요. 단, 적어도 하나는 체크해야 합니다._</center>
+</div>
+
+이런 질문들을 패널들에게 던진 뒤, 여러 패널들이 기입한 내용들을 모아서 통계적 분석까지 하게 됩니다.
+
+<CaptionCenteredImage 
+  imageSrc={surveyImage}
+  imageAlt="만족도 조사 설문지"
+  caption="만족도 조사 설문지"
+  className='w-[500px] object-cover'
+/>
+
+센서리 과학에서 **정동 평가 (Affective assessment)** 는 소비자의 관점에서 그들의 개인적인 기호도와 수용도를 측정하는 실험입니다.<sup><a id='cite-ref-9' href='#cite-fn-9' className='inline-link'>9</a></sup> 실험이 끝나면, 참가자들을 여러 특성으로 나누어 기호도 통계와 사람들의 특성 사이에 뚜렷한 관계가 있는지 살펴봅니다. 가령, "20\~30대 여성 그룹은 30\~40대 남성 그룹과 대조했을 때 이 커피를 9점 만점에서 +2점정도 더 높게 평가하는 경향이 있음" 과 같은 결론을 이끌어 내고 싶은 것입니다.
+
+<div className="rounded-lg border border-gray-300 p-4">
+  <div className="grid grid-cols-9 grid-rows-2">
+    <div>
+      <input type="checkbox" id="affective1" name="affective1"></input>
+    </div>
+    <div>
+      <input type="checkbox" id="affective2" name="affective2"></input>
+    </div>
+    <div>
+      <input type="checkbox" id="affective3" name="affective3"></input>
+    </div>
+    <div>
+      <input type="checkbox" id="affective4" name="affective4"></input>
+    </div>
+    <div>
+      <input type="checkbox" id="affective5" name="affective5"></input>
+    </div>
+    <div>
+      <input type="checkbox" id="affective6" name="affective6"></input>
+    </div>
+    <div>
+      <input type="checkbox" id="affective7" name="affective7"></input>
+    </div>
+    <div>
+      <input type="checkbox" id="affective8" name="affective8"></input>
+    </div>
+    <div>
+      <input type="checkbox" id="affective9" name="affective9"></input>
+    </div>
+    <div>
+      <label for="affective1" className='text-xs'>극도로 싫음</label>
+    </div>
+    <div>
+      <label for="affective2" className='text-xs'>아주 싫음</label>
+    </div>
+    <div>
+      <label for="affective3" className='text-xs'>적당히 싫음</label>
+    </div>
+    <div>
+      <label for="affective4" className='text-xs'>조금 싫음</label>
+    </div>
+    <div>
+      <label for="affective5" className='text-xs'>좋지도 싫지도</label>
+    </div>
+    <div>
+      <label for="affective6" className='text-xs'>조금 좋음</label>
+    </div>
+    <div>
+      <label for="affective7" className='text-xs'>적당히 좋음</label>
+    </div>
+    <div>
+      <label for="affective8" className='text-xs'>아주 좋음</label>
+    </div>
+    <div>
+      <label for="affective9" className='text-xs'>극도로 좋음</label>
+    </div>
+  </div>
+  <center className='tight'>_드시고 계신 커피는 마시기에 어떻습니까? 커피에 대한 인상을 하나만 체크해 주세요._</center>
+</div>
+
+
+위의 세 가지의 질문은, 실제 CVA 양식에 들어가는 질문의 형태를 참고하여 만든 것입니다. 어떠신가요, 각 항목만 보면 정말 별거 없게 느껴질 수도 있을 것 같습니다. 하지만 실제 CVA 양식은 단순히 커피에 대한 강도, 체크리스트, 만족도조사가 아닌 커피의 여러 속성(향기, 맛, 뒷맛, 산미, 바디 등) 에 각각 강도, 체크리스트, 만족도조사를 해야 합니다. 갑자기 개수가 확 늘어났죠? 실제로 각 커피 종류마다 적게 봐도 A4 용지 절반 정도의 설문을 작성해야 하는데 부담이 그리 적지는 않습니다. 
+
+<a id='img-ref-8'></a>
+<CaptionCenteredImage 
+  imageSrc={scaCvaImage}
+  imageAlt="CVA 평가 양식"
+  caption="CVA는 커피의 다양한 속성을 체계적으로 평가할 수 있도록 설계되었습니다."
+/>
+
+분량이 늘어난 가장 큰 까닭은, 커피의 속성별로 점수만 주고 끝냈던 기존 방식에 비하여 커피의 속성과 그 강도를 평가하는 지면이 새로 생겼기 때문이겠죠. 물론 기존에도 커피에서 느껴지는 향미를 적는 공간은 양식에 있었지만, 단순히 자유롭게 줄글로 향미를 작성하면 되었던 데 반해, CVA는 통제된 양식 안에서 요구하는 대로 기입을 해야 하기 때문에 더 피로도가 있을 수 있습니다. (제가 어플을 만들겠다고 결심하게 된 가장 큰 이유입니다!)
+
+하지만 그만큼 **커피 테이스팅 이후에 얻을 수 있는 정보의 질도 높아진다**고 생각합니다. 매 커핑 때 마다, 많은 커피 평가지가 그냥 현장에 버려지는 모습을 저는 정말 많이 보았습니다. 시트에 있던 수많은 향미에 대한 묘사와 점수들이 가치가 없는 것일까요? 당연히 아닐 겁니다. 하지만 향미 묘사는 원체 다양하고, 그것이 점수와 연결되는 이유도 작성자에게 다시 물어봐야 하기에 결국 평가지를 차곡차곡 모아서 통계를 내어 공유해보려 해도 방법이 마땅히 없습니다. 
+
+현장에서는 참가자들에게 가장 많은 표를 받은 커피를 확인해보는 정도로 끝내게 되는 것이, 그만큼 사람들의 커피에 대한 인상을 종합하기가 참 어렵다는 증거지 않을까 싶습니다. 그토록 어려운 일을 센서리 과학을 통해 이뤄내보고자 노력하는 **SCA와 CVA 개발진들을 저는 진심으로 응원합니다.**
+
+## 실험실을 나온 CVA가 마주친 것은
+
+SCA는 현재진행형으로 CVA를 개발하기 위해 많은 노력을 쏟았습니다. 여러 해의 알파, 베타 테스트 끝에 협회 표준으로서 공식 문서를 만들고,<sup><a id='cite-ref-7' href='#cite-fn-7' className='inline-link'>7</a></sup> CVA를 더 공부하고 싶은 사람들을 위한 자격 과정 역시 만들고 있습니다. CVA는 드디어 2024년이 끝남과 동시에 세상 밖으로 당당히 나왔습니다.
+
+하지만 세상 밖으로 나온 수많은 아이템들이 처음 마주치는 것은 - 무언가의 개발자라면 필연적으로 만나게 되는 운명 - 사람들의 차가운 시선입니다.
+
+### 우리 생활에 닿기에는 너무나도 먼 CVA
+
+막상 CVA는 2025년 현재 시점, SCA가 주관하는 대회를 벗어나서는 활발히 쓰이고 있지 않습니다. 저도 어플을 개발하면서 같은 CVA 어플이 이렇게까지 없을 일인가? 싶기도 했습니다. 아직 세상에 나온지 얼마 되지 않았기 때문일수도 있겠지만, 저는 다른 이유도 있다고 생각합니다.
+
+센서리 과학은 측정 도구로서 인간을 사용하는 것이기에, 가장 중요하게 논하는 것이 바로 **인간 감각의 변동성**입니다. 사람은 주위 환경에 따라, 옆에 있는 사람이 누구인지에 따라, 심지어는 그날그날 기분에 따라서 감각을 다르게 느낍니다. 당연히 이런 변동성은 어떤 실험의 측정 도구로서는 크나큰 문제입니다. 그래서 센서리 과학에선 맛을 보는 실험실의 조명과 벽지 색깔부터, 커피를 놓는 순서, 주위 사람들 및 실험 진행자와의 접촉 등 수많은 요소를 아주 민감하게 통제합니다. (대부분의 과학 분야들이 변인통제를 가장 중요하게 생각하죠.)
+
+이런 센서리 과학의 방법론을 가져온 CVA이다보니, 역시나 기존의 커피를 맛보던 스타일보다 상당히 **엄격하게 절차를 지킬 것을 요구**합니다. 우선, 묘사 평가와 정동 평가, 심지어는 그 외의 외재적 요인 평가들은 한번에 실시하지 말라고 합니다. 위에서 보여드린 결합 평가 양식도, 대체적으로 사용을 권고하지 않는다고 말할 정도입니다.<sup><a id='cite-ref-8' href='#cite-fn-8' className='inline-link'>8</a></sup> 센서리 과학에서는 묘사평가를 거친 패널을 정동평가에 다시 투입하는 것이 매우 부적절하다고 말합니다. 왜냐하면, 묘사평가를 능숙하게 하기 위한 훈련 과정 자체가 패널들의 개인 취향을 크게 바꿔놓기 때문입니다. 따라서 이들로부터 조사된 기호도는 일반적인 커피를 향유하는 사람들과 달라질 수 밖에 없습니다.
+
+또한, 한번에 평가하는 커피는 6개 이하여야 한다고 규정하고 있습니다.<sup><a id='cite-ref-6' href='#cite-fn-6' className='inline-link'>6</a></sup>  거기에 만약 피치 못하게 결합 평가 양식을 사용하게 된다면, 컵 개수를 더욱 줄일 필요가 있다고 말하고 있습니다.<sup><a id='cite-ref-6' href='#cite-fn-6' className='inline-link'>6</a></sup> 센서리 과학에서 걱정하는 부분은 감각 포화라고 부르는 현상인데, 같은 감각을 지나치게 많이 사용하면 그 감각이 일시적으로 마비되는 현상입니다. 따라서 일반적으로는 8~10개의 샘플을 사용하고, 맛이 강하거나 자극적이면 더욱 샘플을 줄여서 실험해야 한다고 말합니다.
+
+이 두가지 예시 모두, 산업적으로는 받아들여지기 힘든 면이 큽니다. 시간적인 면, 물질적인 면, 인적자원의 측면으로 인해서, 커피 테이스팅을 정말로 연구를 하듯 하기에는 포기해야 할 부분이 너무도 많습니다. 하물며 커피 문화를 그저 즐기는 평범한 사람들 입장에서 CVA는 얼마나 과하게 느껴질까요? 
+
+### 마치며 : 과학적인 것은 올바른 것인가?
+
+지금까지 개발자+공돌이인 윈터의 시선으로 본 커피의 흐름과 CVA에 대한 길고 긴 이야기를 읽어주셔서 너무나 감사드립니다. 스페셜티 커피라는 문화를 쉽고 재밌게 읽을 수 있게끔 쓰고 싶었는데, 적다 보니 결국 글이 길어지고 또 어려워진 것 같습니다. 그만큼 어느 한 분야의 발전 과정이라는 것이, 결코 쉽게 논할 수 있는 주제가 아니라는 것이겠죠.
+
+**글을 진짜 마치기 전에, 정말 마지막으로 되짚고 넘어가고 싶은 부분이 있습니다.**
+
+지금까지 CVA가 커피에 도입되는 과정을 커피가 과학에 물드는 과정으로서 설명하였습니다. 그렇다면, 무언가에 과학을 도입하는 것은 모든 문제를 해결해주는 만능 해결책일까요?
+
+저 개인적으로는 과학적인 것 = 올바른 것이 **절대** 아니라고 생각합니다. 과학은 정확합니다. 왜냐하면, 불확실한 것을 피하기 때문입니다. 불확정성 원리로 대표되는 양자역학도 _"측정 가능한"_ 물리량의 불확정성을 이야기하는 것이지 측정조차 불가능한 것에 도전하지 않습니다. 실험이 불가능한 영역은, 과학의 불모지입니다.
+
+저는 불가능에 도전하고 실험의 영역을 끊임없이 넓혀가는 과학과 공학이 좋습니다. 그러나 아직은 과학으로 설명할 수 없는 것들이 더 많습니다. **커피는 그런 점이 없을까요?** 
+
+<a id='img-ref-4'></a>
+<div class="rows">
+  <CaptionCenteredImage 
+    imageSrc={enjoyWithFriendsImage}
+    imageAlt="친구들과 함께하는 커피"
+    caption="친구들과 함께하는 커피"
+    className='h-[200px] object-cover'
+  />
+
+  <CaptionCenteredImage 
+    imageSrc={coffeeEnjoyImage}
+    imageAlt="커피 한 잔의 짧은 여유"
+    caption="커피 한 잔의 짧은 여유"
+    className='h-[200px] object-cover'
+  />
+</div>
+
+앞서 스마트폰의 핵심 가치는 인간적 가치라고 말씀드린 바 있습니다. 무게를 달 수도, 목록으로 정리할수로 없는 형이상학적인 가치가 우리를 스마트폰 없이 존재가 불가능한 이들로 바꿔놓았습니다. 커피는 어떤가요? 저는 매일 아침 가족들과 함께 아침 커피를 마십니다. 하루 24시간동안 가족들과 맘놓고 이야기할 수 있는 얼마 안되는 이 시간을 저는 정말 좋아합니다. 어느 날 동네 카페에는, 삼삼오오 모인 친구들이 커피를 마시며 나누는 즐거운 수다와 "이 커피는 자몽같은 산미가 있대. 느껴지니?" 하며 커피에 대해 이야기를 나누는 남녀의 모습이 보입니다.
+
+<div class="rows">
+  <CaptionCenteredImage 
+    imageSrc={valueChainImage}
+    imageAlt="수많은 사람들과 다양한 직업이 얽혀있는 커피. 당신이 마시는 커피 한 잔에는 세계가 담겨있습니다."
+    caption="수많은 사람들과 다양한 직업이 얽혀있는 커피. 당신이 마시는 커피 한 잔에는 세계가 담겨있습니다."
+  />
+</div>
+
+그러는 사이에 제 손에 잡힌 커피잔 위에는, 이 작은 한 잔을 위해서 밭을 가꾸고, 불 앞에서 밤을 새고 하루종일 커피를 내리는 수많은 사람들의 모습도 일렁입니다. 과학적 방법론으로 커피를 앞에 두고 느끼는 이런 감정마저 분석해내려면 아직 많은 세월이 필요하지 않을까요?
+
+어플을 만들면서 문득 꿈꾸게 되었습니다. 커피 업계인들이 CVA를 모사한 분석적 도구로서 제 어플을 사용해주는 것을 넘어서, 커피를 좋아하는 평범한 사람도 마치 과학의 날 행사를 즐기는 어린아이처럼 센서리 과학을 즐길 수 있다면 그것이야말로 어플 개발자 윈터를 넘어 인간 윈터가 꼭 보고싶은 모습이 아닐까. 과학이 커피 문화와 어우러지는 일에 나의 어플이 조그만 도움이 된다면 어떨까. 이런 미래들을 상상하였습니다.
+
+거기에 CVA의 속에 담긴 가치에 대한 철학과 센서리 과학을 도입해나간 과정까지 느껴 주었으면... 은 너무 큰 욕심일까요? 하지만 언젠가는 꼭, 여러분들께 과학과 커피가 커피잔 속에서 재미있게 뛰어노는 모습을 보여드리고 말겠습니다. 기대해 주세요!
+
+<details>
+  <summary>**출처 및 참고자료 Reference And Citation**</summary>
+  <details>
+    <summary>이미지 출처</summary>
+    <p><a href="#img-ref-1" className='inline-link'>\[1\]</a> laura-rivera, unsplash</p>
+    <p><a href="#img-ref-2" className='inline-link'>\[2\]</a> photographer thinkstock-83786 (service closed)</p>
+    <p><a href="#img-ref-3" className='inline-link'>\[3\]</a> mikesh-kaos, unsplash</p>
+    <p><a href="#img-ref-4" className='inline-link'>\[4\]</a> Max-Harlynking, unsplash</p>
+    <p><a href="#img-ref-5" className='inline-link'>\[5\]</a> normcore coffee [(source)](https://normcorecoffee.com.au/blogs/coffee-log/fruit-infused-coffee)</p> 
+    <p><a href="#img-ref-6" className='inline-link'>\[6\]</a> npr.org[(source)](https://www.npr.org/sections/thesalt/2016/12/30/506144786/one-mans-quest-to-reinvent-the-wheel-the-flavor-wheel-that-is)</p>
+    <p><a href="#img-ref-7" className='inline-link'>\[7\]</a> reddit[(source)](https://i.redd.it/3ix4ckpmd2671.jpg)</p>
+    <p><a href="#img-ref-8" className='inline-link'>\[8\]</a> sca[(source)](https://sca.coffee)</p>
+    <p><a href="#img-ref-9" className='inline-link'>\[9\]</a> sprudge.com[(source)](https://sprudge.com/2024-world-barista-championship-the-finals-243165.html)</p>
+    <p><a href="#img-ref-10" className='inline-link'>\[10\]</a> gilbert-pagunaling, unsplash</p>
+    <p><a href="#img-ref-11" className='inline-link'>\[11\]</a> google</p>
+    <p><a href="#img-ref-12" className='inline-link'>\[12\]</a> Jonathan gagné, The Physics Of Filter Coffee</p>
+    <p><a href="#img-ref-13" className='inline-link'>\[13\]</a> meticulous[(source)](https://meticuloushome.com/)</p>
+    <p><a href="#img-ref-14" className='inline-link'>\[14\]</a> scaa</p>
+  </details>
+  <br></br>
+  <details>
+    <summary>참고자료, 글타래 별로 참고한 자료</summary>
+    <p>
+      <a href="#상품의-가치에-대하여--스마트폰의-가치" className='inline-link'>\[상품의 가치에 대하여 - 스마트폰의 가치\]</a> \
+      <a href="https://sca.coffee/sca-news/25/issue-19/from-value-to-values-determining-the-worth-of-coffee" className='inline-link'>"From Value to Values: Determining the Worth of Coffee | 25, Issue 19"</a>, SCA
+    </p>
+    <p>
+      <a href="#커피의-가치를-뒤집자--커피-제-3의-물결" className='inline-link'>\[커피의 가치를 뒤집자 : 커피 제 3의 물결\]</a> \
+      <a href="https://terarosalibrary.com/tera-times/18417/" className='inline-link'>"커피 시장의 물결"</a>, 테라로사 도서관
+    </p>
+    <p>
+      <a href="#스페셜-티-커피--무엇이-스페셜을-만드는가" className='inline-link'>\[”스페셜” 티 커피 : 무엇이 스페셜을 만드는가\]</a> 
+      <a href="#되돌아간-질문--무엇이-스페셜을-만드는가" className='inline-link'>\[되돌아간 질문 : 무엇이 스페셜을 만드는가\]</a> \
+      <a href="https://sca.coffee/sca-news/just-released-new-sca-white-paper-towards-a-definition-of-specialty-coffee" className='inline-link'>"Towards a Definition of Specialty Coffee \: Building an Understanding Based on Attributes"</a>, SCA
+    </p>
+    <p>
+      <a href="#cva로-엿보는-센서리-과학" className='inline-link'>\[CVA로 엿보는 센서리 과학\]</a> \
+      <a href="https://sca.coffee/research/coffee-standards" className='inline-link'>"SCA Standard 102-2024", "103-2024", "104-2024"</a>, SCA \
+      <a href="https://doi.org/10.1201/9781003040729" className='inline-link'>"Sensory Evaluation Techniques"</a>, Morten C. Meilgaard, B. Thomas Carr, Gail Vance Civille   
+    </p>
+    <p>
+      <a href="#점수-주기--100점-만점에-80점-이상만-통과" className='inline-link'>\[점수 주기 : 100점 만점에 80점 이상만 통과\]</a> \
+      <a href="https://coffee-price.com/15833/" className='inline-link'>"다시 말하는 스페셜티 커피"</a>, 그리니시 레터 Vol.143
+      <a href="https://www.coffeeinstitute.org/about/faqs#q-coffees" className='inline-link'>"FAQs : Grading and Certifying Coffees - How do I have a coffee sample evaluated?"</a>, CQI
+    </p>
+    <p>
+      <a href="#우리-생활에-닿기에는-너무나도-먼-cva" className='inline-link'>\[우리 생활에 닿기에는 너무나도 먼 CVA\]</a> \
+      <a href="https://sca.coffee/sca-news/read/evolving-the-sca-cupping-protocol-and-form-an-overview-of-the-pilot-testing-process" className='inline-link'>"Evolving the SCA Cupping Protocol and Form: An Overview of the Pilot Testing Process"</a>, SCA
+      <a href="https://doi.org/10.1201/9781003040729" className='inline-link'>"Sensory Evaluation Techniques"</a>, Morten C. Meilgaard, B. Thomas Carr, Gail Vance Civille
+    </p>
+  </details>
+  <br></br>
+  <details>
+    <summary>참고자료, 부분부분 참고한 자료</summary>
+    <p>
+      <a href="#cite-ref-1" id="cite-fn-1" className='inline-link'>\[1\]</a>
+      <a href="https://www.ifst.org/membership/networks-and-communities/special-interest-groups/sensory-science-group/what-sensory" className='inline-link'>"'What is Sensory Science?' - Think Piece"</a>, IFST
+    </p>
+    <p>
+      <a href="#cite-ref-2" id="cite-fn-2" className='inline-link'>\[2\]</a>
+      <a href="https://doi.org/10.1080/03610470.2020.1795795" className='inline-link'>"Flavors in Malt Whisky: A Review"</a>, Akira Wanikawa
+    </p>
+    <p>
+      <a href="#cite-ref-3" id="cite-fn-3" className='inline-link'>\[3\]</a>
+      <a href="https://doi.org/10.5344/ajev.2007.58.2.252" className='inline-link'>"Sensory Evaluation of Wine and Commercial Realities: Review of Current Practices and Perspectives"</a>, Isabelle Lesschaeve
+    </p>
+    <p>
+      <a href="#cite-ref-4" id="cite-fn-4" className='inline-link'>\[4\]</a>
+      <a href="https://doi.org/10.1016/j.foodqual.2022.104614" className='inline-link'>"Approaching 100 years of sensory and consumer science: Developments and ongoing issues"</a>, H.L. Meiselman, S.R. Jaeger, B.T. Carr, A. Churchill
+    </p>
+    <p>
+      <a href="#cite-ref-5" id="cite-fn-5" className='inline-link'>\[5\]</a>
+      <a href="https://www.scribd.com/document/740956100/SCA-Sensory-Cupping-Handbook-Digital-21-09-1" className='inline-link'>"SCA Sensory-Cupping Handbook"</a>, Mario Roberto Fernandez Alduenda, Peter Giuliano
+    </p>
+    <p>
+      <a href="#cite-ref-6" id="cite-fn-6" className='inline-link'>\[6\]</a>
+      <a href="https://worldcoffeeresearch.org/resources/sensory-lexicon" className='inline-link'>"Sensory Lexicon 2.0"</a>, WCR
+    </p>
+    <p>
+      <a href="#cite-ref-7" id="cite-fn-7" className='inline-link'>\[7\]</a>
+      <a href="https://static1.squarespace.com/static/584f6bbef5e23149e5522201/t/6731cfbf355ac535d2d6074c/1731317695988/AW_SCA-102_Sample-Preparation_28.10.24_Secured.pdf" className='inline-link'>"SCA Standard
+102-2024"</a>, SCA
+    </p>
+    <p>
+      <a href="#cite-ref-8" id="cite-fn-8" className='inline-link'>\[8\]</a>
+      <a href="https://static1.squarespace.com/static/584f6bbef5e23149e5522201/t/667182ffdde8a5081afc2d8c/1718715138872/SCA+-+A+System+to+Asssess+Coffee+Value+-+June+2024+(Secured).pdf" className='inline-link'>"A System to Assess Coffee Value Understanding the Specialty Coffee Association’s Coffee Value Assessment"</a>, SCA
+    </p>
+    <p>
+      <a href="#cite-ref-9" id="cite-fn-9" className='inline-link'>\[9\]</a>
+      <a href="https://doi.org/10.1201/9781003040729" className='inline-link'>"Sensory Evaluation Techniques"</a>, Morten C. Meilgaard, B. Thomas Carr, Gail Vance Civille
+    </p>
+  </details>
+</details>
+
+
+<style>
+{`
+  input[type="range"], input[type="checkbox"] {
+    accent-color: rgb(var(--color-accent));
+  }
+  
+  input[type="range"]::-webkit-slider-thumb, input[type="checkbox"]::-webkit-slider-thumb {
+    background: var(--accent-color);
+  }
+
+  input[type="range"]::-moz-range-thumb, input[type="checkbox"]::-moz-range-thumb {
+    background: var(--accent-color);
+  }
+`}
+</style>
+
+<script>
+{`
+  document.addEventListener('DOMContentLoaded', function() {
+    // Handle slider value display
+    const slider = document.getElementById('intensitySlider');
+    const sliderValue = document.getElementById('sliderValue');
+    
+    slider.addEventListener('input', function() {
+      sliderValue.textContent = this.value / 100;
+    });
+
+    // Handle descriptive checkboxes (max 2 selections)
+    const descriptiveCheckboxes = document.querySelectorAll('input[id^="descriptive"]');
+    descriptiveCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const checkedCount = Array.from(descriptiveCheckboxes).filter(cb => cb.checked).length;
+        if (checkedCount > 2) {
+          this.checked = false;
+        }
+      });
+    });
+
+    // Handle affective checkboxes (single selection)
+    const affectiveCheckboxes = document.querySelectorAll('input[id^="affective"]');
+    affectiveCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        if (this.checked) {
+          affectiveCheckboxes.forEach(cb => {
+            if (cb !== this) {
+              cb.checked = false;
+            }
+          });
+        }
+      });
+    });
+  });
+`}
+</script>

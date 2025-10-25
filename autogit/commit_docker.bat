@@ -1,0 +1,1 @@
+docker build -t ghcr.io/enzoescipy/winter-sci-dev:pending .
