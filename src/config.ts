@@ -65,10 +65,10 @@ export const SOCIALS: SocialObjects = [
 ];
 
 export const GISCUS = {
-    repo: process.env.GISCUS_REPO || 'enzoescipy/winter.sci.dev', // Replace with your repo
-    repoId: process.env.GISCUS_REPOSITORY_ID || 'R_kgDO...placeholder', // Get from giscus.app
-    category: process.env.GISCUS_CATEGORY || 'General',
-    categoryId: process.env.GISCUS_CATEGORY_ID || 'DIC_kw...placeholder', // Get from giscus.app
+    repo: 'enzoescipy/winter.sci.dev', // Replace with your repo
+    repoId: 'R_kgDONnJ-yg', // Get from giscus.app
+    category: 'General',
+    categoryId: 'DIC_kwDONnJ-ys4CxDO1', // Get from giscus.app
     mapping: 'pathname',
     reactionsEnabled: '1',
     emitMetadata: '0',
