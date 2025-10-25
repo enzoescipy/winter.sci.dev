@@ -299,7 +299,7 @@ Our Sequence Merger is different. It is the first 'reader' that understands *why
 
 At the core of the Sequence Merger lies the **Extrapolation Hypothesis**—our guiding principle for transcending the inherent context length limitations of base embedding models like `intfloat/multilingual-e5-base` (max 512 tokens).
 
-While recent approaches like `LongEmbed`<sup><a id='cite-ref-5' href='#cite-fn-5' className='inline-link'>5</a></sup> have made significant strides in extending context windows through techniques like Position Interpolation—effectively 'stretching' the existing positional encoding space to accommodate longer sequences—these methods represent a form of **engineering ingenuity within established constraints**. They cleverly work around the limitations of existing architectures.
+This challenge of 'Length Generalization'—enabling models to process sequences far beyond their training context windows—is recognized as one of the most significant hurdles in modern Transformer research<sup><a id='cite-ref-7' href='#cite-fn-7' className='inline-link'>7</a></sup>. While recent approaches like `LongEmbed`<sup><a id='cite-ref-5' href='#cite-fn-5' className='inline-link'>5</a></sup> have made significant strides in extending context windows through techniques like Position Interpolation—effectively 'stretching' the existing positional encoding space to accommodate longer sequences—these methods represent a form of **engineering ingenuity within established constraints**. They cleverly work around the limitations of existing architectures.
 
 Our approach, however, is fundamentally different. We are not merely stretching existing capabilities; we are **reinventing the very mechanism of sequence understanding**.
 
@@ -420,7 +420,9 @@ To eliminate this, we developed a dedicated pre-training corpus from `wikipedia/
 />
 
 
-At the apex of our Extrapolation Hypothesis lies the 3-Stage Rocket Protocol—a comprehensive, battle-tested blueprint that propels models from naive aggregators to extrapolative synthesizers. Forged from iterative experimentation, this protocol synthesizes our key innovations (PPE, vBERT) and strategies (Progressive Overload) into a seamless ascent: Stage 1 builds philosophical foundations, Stage 2 stress-tests through overload, and Stage 3 refines for peak performance. vBERT, though disastrous in isolation (benchmarks plummeting as loss decreases), shines as the irreplaceable 'launchpad'—pre-pre-training that awakens innate vector synthesis principles.
+Just as `RoBERTa`<sup><a id='cite-ref-8' href='#cite-fn-8' className='inline-link'>8</a></sup> demonstrated that BERT was **significantly undertrained** and required a more robust, intensive pre-training regimen to unlock its full potential, we recognized that our Sequence Merger's true extrapolative capabilities could not be realized through simple fine-tuning alone. True mastery of sequence synthesis demands a deep, foundational understanding of vector relationships—a level of comprehension that can only be forged through deliberate, multi-stage training.
+
+At the apex of our Extrapolation Hypothesis lies the **3-Stage Rocket Protocol**—a comprehensive, battle-tested blueprint that propels models from naive aggregators to extrapolative synthesizers. Forged from iterative experimentation, this protocol synthesizes our key innovations (PPE, vBERT) and strategies (Progressive Overload) into a seamless ascent: Stage 1 builds philosophical foundations, Stage 2 stress-tests through overload, and Stage 3 refines for peak performance. vBERT, though disastrous in isolation (benchmarks plummeting as loss decreases), shines as the irreplaceable 'launchpad'—pre-pre-training that awakens innate vector synthesis principles.
 
 #### Stage 1: Pre-Pre-Training – vBERT (Instilling First Principles)
 
@@ -614,5 +616,13 @@ Thank You.
   <p>
     <a href="#cite-ref-6" id="cite-fn-6" className='inline-link'>[6]</a>
     <a href="https://arxiv.org/abs/2405.14722v1" className='inline-link'>CAPE: Context-Adaptive Positional Encoding for Length Extrapolation</a>, Chuanyang Zheng et al.
+  </p>
+  <p>
+    <a href="#cite-ref-7" id="cite-fn-7" className='inline-link'>[7]</a>
+    <a href="https://arxiv.org/abs/2311.04235" className='inline-link'>The Impact of Positional Encoding on Length Generalization in Transformers</a>, Amirhossein Kazemnejad et al.
+  </p>
+  <p>
+    <a href="#cite-ref-8" id="cite-fn-8" className='inline-link'>[8]</a>
+    <a href="https://arxiv.org/abs/1907.11692" className='inline-link'>RoBERTa: A Robustly Optimized BERT Pretraining Approach</a>, Yinhan Liu et al.
   </p>
 </details>
