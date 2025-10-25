@@ -299,7 +299,9 @@ Our Sequence Merger is different. It is the first 'reader' that understands *why
 
 At the core of the Sequence Merger lies the **Extrapolation Hypothesis**—our guiding principle for transcending the inherent context length limitations of base embedding models like `intfloat/multilingual-e5-base` (max 512 tokens).
 
-We posit that by training a lightweight model to synthesize a single representative embedding from N individual chunk embeddings—where each chunk and their concatenation fit within the base model's context limit—the model learns not mere memorization, but the fundamental *function* of semantic synthesis. This function captures the relational dynamics and sequential coherence among vectors, allowing the model to preserve and integrate meaning progressively.
+While recent approaches like `LongEmbed`<sup><a id='cite-ref-5' href='#cite-fn-5' className='inline-link'>5</a></sup> have made significant strides in extending context windows through techniques like Position Interpolation—effectively 'stretching' the existing positional encoding space to accommodate longer sequences—these methods represent a form of **engineering ingenuity within established constraints**. They cleverly work around the limitations of existing architectures.
+
+Our approach, however, is fundamentally different. We are not merely stretching existing capabilities; we are **reinventing the very mechanism of sequence understanding**.
 
 ### From N-to-1 Synthesis to Infinite Extrapolation
 - **Training Phase (Within Limits):** During training, inputs are N chunk embeddings `[vec(A), vec(B), ..., vec(N)]`, derived from texts where the full concatenation `A + B + ... + N` remains ≤512 tokens. The target is the base model's direct embedding `vec(A + B + ... + N)`, ensuring ground-truth supervision. This teaches the model to merge sequences reliably within bounded contexts.
@@ -342,9 +344,7 @@ By embracing failure as the crucible for growth, Progressive Overload ensures ou
 
 Within this paradigm, PPE addresses the challenge of injecting sequence order into high-dimensional chunk embeddings without distorting their rich semantics. The problem isn't with Positional Encoding itself, but with the 'information density' of the data it's applied to.
 
-Consider the traditional Transformer models like BERT: each token's embedding carries a relatively low information density—a 'speck of dust' of meaning. Adding a positional signal to this dust doesn't significantly corrupt its original, sparse information.
-
-However, in our vBERT system, each embedding vector is a 'jewel'—an information-dense compression of hundreds of tokens, carefully crafted by `intfloat/multilingual-e5-base`. When we attempted to apply traditional positional encoding to these 'jewels,' it was akin to tarnishing a finely cut gemstone by haphazardly smearing it with new information. The delicate balance was destroyed, and our benchmarks plummeted.
+Recent research like `CAPE`<sup><a id='cite-ref-6' href='#cite-fn-6' className='inline-link'>6</a></sup> has also recognized that traditional positional encoding struggles with long contexts, proposing to dynamically adjust the importance of positional information based on context through complex attention mechanism modifications. While this represents a sophisticated engineering solution, we took a more fundamental approach: instead of modifying how attention weights positional information, we questioned why the 'jewel' of semantic meaning must be tarnished with positional 'stamps' at all.
 
 PPE is our 'goldsmith's solution.' Instead of defacing the jewel, PPE preserves its integrity by thoughtfully carving out dedicated 'edges' for positional information:
 
@@ -606,5 +606,13 @@ Thank You.
   <p>
     <a href="#cite-ref-4" id="cite-fn-4" className='inline-link'>[4]</a>
     <a href="https://arxiv.org/abs/2005.11401" className='inline-link'>Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</a>, Patrick Lewis et al.
+  </p>
+  <p>
+    <a href="#cite-ref-5" id="cite-fn-5" className='inline-link'>[5]</a>
+    <a href="https://arxiv.org/abs/2404.12096" className='inline-link'>LongEmbed: Extending Embedding Models for Long Context Retrieval</a>, Dawei Zhu et al.
+  </p>
+  <p>
+    <a href="#cite-ref-6" id="cite-fn-6" className='inline-link'>[6]</a>
+    <a href="https://arxiv.org/abs/2405.14722v1" className='inline-link'>CAPE: Context-Adaptive Positional Encoding for Length Extrapolation</a>, Chuanyang Zheng et al.
   </p>
 </details>
