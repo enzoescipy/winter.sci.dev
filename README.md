@@ -103,7 +103,7 @@ docker run -p 80:80 -p 443:443
   -e EMAIL=enzoescipy@gmail.com 
   -v /etc/letsencrypt:/etc/letsencrypt 
   -v /var/lib/letsencrypt:/var/lib/letsencrypt 
-  winter-sci-dev
+  ghcr.io/enzoescipy/winter-sci-dev:latest
 ```
 
 For docker-compose:
