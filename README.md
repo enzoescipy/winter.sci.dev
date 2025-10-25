@@ -1,6 +1,6 @@
 # winter.sci.dev - Wintergreen Labs
 
-[Wintergreen-Lab Cheif Winter's Blog](https://www.winter-sci-dev.com/about/)
+[❄️ Wintergreen-Lab Cheif Winter's Blog ❄️](https://www.winter-sci-dev.com/about/)
 
 winter.sci.dev is the digital home of **Wintergreen Labs** (겨울녹 연구소), built as a highly customized fork of [AstroPaper](https://github.com/satnaing/astro-paper), a minimal, responsive, accessible, and SEO-friendly Astro blog theme originally designed and crafted by [Sat Naing](https://satnaing.dev).
 
