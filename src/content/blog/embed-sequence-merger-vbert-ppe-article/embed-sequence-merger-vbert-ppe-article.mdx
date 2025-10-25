@@ -19,6 +19,7 @@ description: "The Sequence Merger is a custom neural architecture designed for i
 import { Image } from 'astro:assets';
 import LinkButton from '@components/LinkButton.astro';
 import CaptionCenteredImage from '@components/CaptionCenteredImage.astro';
+import CustomLinkPreview from '@components/CustomLinkPreview.astro';
 import { LinkPreview } from 'astro-embed';
 
 import coffeeAndTimeImage from "./source/coffee-and-time.jpg";
@@ -30,6 +31,15 @@ import colaborateImage from "./source/colaborate.jpg";
 import writeImage from "./source/write.jpg";
 import oldBooksImage from "./source/old_books.jpg";
 import childImage from "./source/child.jpg";
+import gymImage from "./source/gym.jpg";
+import roadImage from "./source/highway.jpg";
+import bertImage from "./source/bert.png";
+import roketImage from "./source/roket.jpg";
+import topographyImage from "./source/topography.png";
+import githubImage from "./source/github.png";
+import hfImage from "./source/hf.png";
+
+
 
 <CaptionCenteredImage 
   imageSrc={coffeeAndTimeImage}
@@ -294,29 +304,16 @@ We posit that by training a lightweight model to synthesize a single representat
 ### From N-to-1 Synthesis to Infinite Extrapolation
 - **Training Phase (Within Limits):** During training, inputs are N chunk embeddings `[vec(A), vec(B), ..., vec(N)]`, derived from texts where the full concatenation `A + B + ... + N` remains ≤512 tokens. The target is the base model's direct embedding `vec(A + B + ... + N)`, ensuring ground-truth supervision. This teaches the model to merge sequences reliably within bounded contexts.
 
-- **Inference Phase (Beyond Limits):** In deployment, the model's output—itself a synthesized vector—becomes an input for the next merge. By recursively chaining outputs (e.g., merge `[vec(A)..vec(K)]` to synth_vec(A..K), then merge with `[vec(K+1)..vec(M)]`), the model extrapolates to arbitrarily long sequences, far exceeding 512 tokens. This self-referential synthesis maintains 'semantic momentum,' avoiding catastrophic loss of earlier context.
-
-### Key Implications
-- **Extended Context:** Enables processing of documents, conversations, or streams of any length as a single coherent embedding, without relying on resource-intensive long-context models.
-- **Efficiency and Autonomy:** No need for repeated API calls or full-sequence re-embedding; operates on pre-computed chunks, reducing latency and cost to near-zero beyond initial embedding.
-- **Validation:** Initial experiments show stable cosine similarity (>0.75) in chained merges up to 10x the base limit, with minimal degradation in recall of initial chunks—proving the hypothesis's viability.
-
-## Key Configurable Parameters
-
-Our architecture shines through its flexible hyperparameters, allowing fine-tuned control over the pipeline:
-
-- **d_model**: Embedding dimension (default: 768, E5-base compatible for seamless integration).
-- **num_layers**: Depth of the transformer stack (e.g., 4-7 layers for balanced performance).
-- **nhead**: Number of attention heads (default: 8; per-layer variations supported).
-- **layer_dims**: Variable intermediate dimensions per layer (e.g., `[3840, 1920, 768]` for progressive compression—our signature bottleneck design).
-- **ffn_dims**: Custom feed-forward hidden sizes per layer (e.g., `[8192, 6144, 4096]` for GLU-enhanced expansion).
-- **nhead_dims**: Per-layer head counts (e.g., `[4, 3, 2, 2, 2]` for adaptive attention scaling).
-- **use_glu**: Enable Gated Linear Units in FFN for non-linear gating (default: False; boosts expressivity in complex merges).
-- **dropout**: Regularization rate (e.g., 0.1-0.12 for stable training).
-
-These parameters enable architectures with 137M to 206M parameters, optimized for efficiency and coherence. Explore variants by tweaking `config.json` and retraining!
+- **Inference Phase (The Bold Extrapolation):** In deployment, our model—trained exclusively on synthesizing N chunk embeddings where the combined length remains ≤512 tokens `if each chunk is 200 tokens, then 200+200=400 tokens < 512`—makes a bold prediction. It extrapolates this learned fundamental *function* of semantic synthesis to sequences far exceeding its training limits `500+500=1000 tokens, even 500+500+500+500=2000 tokens too` in a *single, non-recursive pass*. This demonstrates that the model truly learns the underlying principles of meaning compression, rather than merely memorizing patterns within a bounded context.
 
 ## Training Philosophy: The Principle of Progressive Overload Fine-Tuning
+
+<CaptionCenteredImage 
+  imageSrc={gymImage}
+  caption="Sometimes, Excellent performance comes from the most boring work."
+  imageAlt="Sometimes, Excellent performance comes from the most boring work."
+/>
+
 
 Our training paradigm emerges from a profound failure-turned-insight: an experiment with extreme datasets that initially devastated performance but ultimately revealed the path to superior generalization.
 
@@ -334,12 +331,72 @@ The pivot came from reframing this devastating failure not as an end, but as a c
 
 By embracing failure as the crucible for growth, Progressive Overload ensures our mergers evolve from fragile aggregators to resilient synthesizers—ready for the infinite extrapolation promised by our core philosophy.
 
-### Key Innovation: Paired Positional Encoding (PPE)
-Within this paradigm, PPE addresses the challenge of injecting sequence order into high-dimensional chunk embeddings without distorting their rich semantics. Traditional positional encodings add noise-like signals, degrading benchmarks; PPE duplicates the sequence and *overwrites* dedicated dimension slots (front/back split) with position vectors, preserving 90%+ of original meaning while enabling precise positional awareness.
+## Key Innovation: Paired Positional Encoding (PPE)
 
-## Core Self-Supervised Method: vBERT
+<CaptionCenteredImage 
+  imageSrc={roadImage}
+  caption="To transfer the position information, we need to secure enough space from the original embed vector."
+  imageAlt="To transfer the position information, we need to secure enough space from the original embed vector."
+/>
 
-vBERT represents our crowning achievement: a vector-native adaptation of BERT-style pre-training, tailored for sequence mergers. By leveraging PPE, vBERT uses two intertwined self-supervised tasks—vMLM (violated Masked Language Model) and vNSP (violated Next Sentence Prediction)—to instill temporal and semantic coherence in the model. These tasks run concurrently, with total loss = loss_vmlm + loss_vnsp, enabling the model to evolve from a mere aggregator to a deep synthesizer of meaning.
+
+Within this paradigm, PPE addresses the challenge of injecting sequence order into high-dimensional chunk embeddings without distorting their rich semantics. The problem isn't with Positional Encoding itself, but with the 'information density' of the data it's applied to.
+
+Consider the traditional Transformer models like BERT: each token's embedding carries a relatively low information density—a 'speck of dust' of meaning. Adding a positional signal to this dust doesn't significantly corrupt its original, sparse information.
+
+However, in our vBERT system, each embedding vector is a 'jewel'—an information-dense compression of hundreds of tokens, carefully crafted by `intfloat/multilingual-e5-base`. When we attempted to apply traditional positional encoding to these 'jewels,' it was akin to tarnishing a finely cut gemstone by haphazardly smearing it with new information. The delicate balance was destroyed, and our benchmarks plummeted.
+
+PPE is our 'goldsmith's solution.' Instead of defacing the jewel, PPE preserves its integrity by thoughtfully carving out dedicated 'edges' for positional information:
+
+1.  **Duplication:** The input sequence is duplicated.
+    - `[A, B, C, D, E]` → `[A, B, C, D, E, A, B, C, D, E]`
+2.  **Dedicated Slots:** For each pair, specific slots (`ppe_dim/2` dimensions at the front and `ppe_dim/2` at the back) are designated as 'positional carriers.'
+    - `[A, B, C, D, E, A, B, C, D, E]` → `[a, b, c, d, e, a, b, c, d, e]`
+3.  **Selective Overwriting:** Positional vectors are *overwritten* into these dedicated slots in the duplicated sequences. This ensures that the majority (90%+) of the original embedding's dimensions, carrying the rich semantic 'jewel,' remain completely untouched.
+    -  `[a, b, c, d, e, a, b, c, d, e]` → `[a1, b1, c1, d1, e1, a2, b2, c2, d2, e2]`
+
+By adopting this 'goldsmith's approach,' PPE allows us to inject precise positional awareness without suffering the catastrophic 'tarnishing' of our information-dense embeddings. This was not a mere trick, but a necessary invention to reconcile the need for sequence information with the high-fidelity demands of working with vectorized meaning.
+
+<br></br>
+
+# Core Self-Supervised Method: vBERT
+<br></br>
+
+<CaptionCenteredImage 
+  imageSrc={bertImage}
+  caption="BERT = MLM + NSP"
+  imageAlt="BERT = MLM + NSP"
+/>
+
+
+Having established the 'Extrapolation Hypothesis' and refined our method for handling vector-based positional information with PPE, we faced a profound challenge: how to teach our Sequence Merger (vBERT) to truly synthesize meaning and time beyond the strictures of supervised learning. The crux of the problem lay in the 'Teacher-Student Paradox.'
+
+Our 'teacher' model, `intfloat/multilingual-e5-base`, was a master of its domain, capable of generating incredibly rich embeddings for sequences up to 512 tokens. Yet, when we sought to train our vBERT to extrapolate—to merge *beyond* this 512-token limit—we hit an inescapable wall. The teacher, by definition, could not provide the 'ground truth' single vector for a sequence it had never truly understood (i.e., one exceeding its own context window).
+
+We couldn't endlessly rely on the embedding engine for answers it simply couldn't give. Our query evolved: not just 'what is the correct answer,' but 'how does the embedding engine itself arrive at an answer?' We needed to return to first principles, to understand how an embedding engine intrinsically learns to condense meaning into a vector. In essence, we decided to 'dissect the teacher.'
+
+vBERT represents our intellectual declaration of independence: a vector-native adaptation of BERT-style self-supervised pre-training, specifically tailored for sequence mergers. By leveraging PPE, vBERT employs two deeply intertwined self-supervised tasks—vMLM (violated Masked Language Model) and vNSP (violated Next Sequence Prediction)—to instill both temporal and semantic coherence directly into the model. These tasks run concurrently, with total loss = loss_vmlm + loss_vnsp, enabling the model to evolve from a mere aggregator of existing knowledge to a deep synthesizer of new, extrapolated meaning.
+
+### vMLM: Self-Consistent Vector Reconstruction
+vMLM refines the MLM paradigm for vectors, enforcing that predictions maintain global sequence coherence via a feedback injection loop.
+
+1. **Masking:** Randomly mask 15% of tokens in the input sequence, 
+    - `[A, B, C, D, E]` → `[A, M, C, D, E]`
+2. **Forward Pass on Masked Sequence:** Pass through the model with PPE duplication, yielding hidden layer outputs. 
+    - `[cls', a1', m1', c1', d1', e1', a2', m2', c2', d2', e2']`
+    - Extract the predicted masked vectors `m1'` (first duplicate) and `m2'` (second duplicate).
+3. **Original CLS Acquisition:** Pass the unmasked original sequence through the model to obtain `embedding-original` (the final CLS token after PPE processing).
+4. **Prediction Injection:** Re-pass the masked sequence, but during PPE, stealthily replace the masked positions with the predicted `m1'` and `m2'` (integrating into the appropriate front/back slots). This generates `embedding-gusses` (new CLS token).
+5. **Strict L1 Loss Computation:** Calculate **L1 loss** (Mean Absolute Error across all 768 dimensions) between  `embedding-original` and `embedding-gusses`. Unlike lenient cosine similarity, L1 demands exact matching of both direction *and* magnitude, forging unyielding precision in reconstructions.
+
+### vNSP: Binary Continuity Classification
+vNSP upgrades NSP for vectors, using a classification head to detect sequence authenticity and penalize disruptions.
+
+1. **History Generation:** For 50% of batches, create false histories: split the sequence at mid-point, discard the latter half, and splice in a random prefix from another sequence (for this reason, database should be carefully built. this will be discuss later.)
+    - `[A, B, C, D]` → `[A, B, R', Q']` (50% chance)
+2. **PPE Processing:** Apply PPE to true/false sequences independently, embedding positional cues to highlight discontinuities in false cases.
+3. **Classification Head:** Forward to get normalized CLS (cls_norm), pass through a dedicated NSP head `nn.Linear(768, 2)` yielding logits `[IsNext, NotNext]`.
+4. **Cross-Entropy Loss:** Label true as 0 (IsNext), false as 1 (NotNext). compute CE loss. High ppe_dim amplifies temporal breaks; low ppe_dim focuses on semantic jarring.
 
 ### Critical Prerequisite: The `1-Article-1-Sequence` Dataset
 
@@ -350,26 +407,18 @@ Standard n-to-1 datasets (e.g., 512-to-1 or 10-to-1) are incompatible for vBERT:
 - **Self-Supervised Nature:** vBERT does not rely on ground-truth to-1 vectors; attempts to use such datasets introduce unnecessary supervisory noise absent in pure self-supervision.
 - **The False History Paradox:** Sliding-window construction generates overlapping, semantically coherent sequences from the same source. In vNSP, creating 'false histories' by splicing can inadvertently produce near-identical continuations (e.g., adjacent overlaps), leading to false negatives. The model learns to flag coherent narratives as 'disrupted,' creating a schizophrenic training signal that erodes context awareness and caps pre-training efficacy.
 
-To eliminate this, we developed a dedicated pre-training corpus from `wikipedia/wikipedia` (multi-language editions like en, ko, fr, etc.) 1 Article = 1 Sequence. Process each full article into a single, unbroken vector sequence without sliding windows or partial excerpts.
+To eliminate this, we developed a dedicated pre-training corpus from `wikipedia/wikipedia` (multi-language editions like en, ko, fr, etc.) **1 Article = 1 Sequence**. Process each full article into a single, unbroken vector sequence without sliding windows or partial excerpts.
 
-### vMLM: Self-Consistent Vector Reconstruction
-vMLM refines the MLM paradigm for vectors, enforcing that predictions maintain global sequence coherence via a feedback injection loop.
-
-1. **Masking:** Randomly mask 15% of tokens in the input sequence, e.g., [A, B, C, D, E] → [A, M, C, D, E].
-2. **Forward Pass on Masked Sequence:** Pass through the model with PPE duplication, yielding hidden layer outputs [cls', a1', m1', c1', d1', e1', a2', m2', c2', d2', e2']. Extract the predicted masked vectors m1' (first duplicate) and m2' (second duplicate).
-3. **Original CLS Acquisition:** Pass the unmasked original sequence through the model to obtain CLS_orig (the final CLS token after PPE processing).
-4. **Prediction Injection:** Re-pass the masked sequence, but during PPE, stealthily replace the masked positions with the predicted m1' and m2' (integrating into the appropriate front/back slots). This generates CLS_guesses (new CLS token).
-5. **Strict L1 Loss Computation:** Calculate L1 loss (Mean Absolute Error across all 768 dimensions) between CLS_guesses and CLS_orig. Unlike lenient cosine similarity, L1 demands exact matching of both direction *and* magnitude, forging unyielding precision in reconstructions.
-
-### vNSP: Binary Continuity Classification
-vNSP upgrades NSP for vectors, using a classification head to detect sequence authenticity and penalize disruptions.
-
-1. **History Generation:** For 50% of batches, create false histories: split the sequence at mid-point (split_idx = len // 2), discard the latter half, and splice in a random prefix from another sequence (for this reason, database should not be neither the 512-to-1 nor the 10-to-1. this will be discuss later.), e.g., [A, B, C] → [A, B, D'] where D' disrupts flow.
-2. **PPE Processing:** Apply PPE to true/false sequences independently, embedding positional cues to highlight discontinuities in false cases.
-3. **Classification Head:** Forward to get normalized CLS (cls_norm), pass through a dedicated NSP head (nn.Linear(768, 2)) yielding logits [IsNext, NotNext].
-4. **Cross-Entropy Loss:** Label true as 0 (IsNext), false as 1 (NotNext); compute CE loss. High ppe_dim amplifies temporal breaks; low ppe_dim focuses on semantic jarring.
 
 ## The 3-Stage Rocket Protocol: Unified Training Philosophy
+
+<CaptionCenteredImage 
+  imageSrc={roketImage}
+  caption="3-STEP is needed to fire the enourmous roket to the space."
+  imageAlt="3-STEP is needed to fire the enourmous roket to the space."
+  className='h-[700px] object-cover'
+/>
+
 
 At the apex of our Extrapolation Hypothesis lies the 3-Stage Rocket Protocol—a comprehensive, battle-tested blueprint that propels models from naive aggregators to extrapolative synthesizers. Forged from iterative experimentation, this protocol synthesizes our key innovations (PPE, vBERT) and strategies (Progressive Overload) into a seamless ascent: Stage 1 builds philosophical foundations, Stage 2 stress-tests through overload, and Stage 3 refines for peak performance. vBERT, though disastrous in isolation (benchmarks plummeting as loss decreases), shines as the irreplaceable 'launchpad'—pre-pre-training that awakens innate vector synthesis principles.
 
@@ -377,18 +426,30 @@ At the apex of our Extrapolation Hypothesis lies the 3-Stage Rocket Protocol—a
 
 vBERT serves as the 'temporal archaeologist' phase: a self-supervised pre-training regime that etches core principles of vector coherence into a blank-slate model, using PPE (high ppe_dim=384) to inject positional fidelity without semantic distortion.
 
-**Key Enabler: Paired Positional Encoding (PPE)** 
-PPE duplicates sequences and overwrites dedicated slots (front/back m/2 splits, m=ppe_dim) with positional vectors, preserving 90%+ original meaning. High ppe_dim (384) prioritizes temporal stability, preventing gradient explosions in self-supervision. 
+- **Key Enabler: Overloaded Paired Positional Encoding (Extensive PPE)** 
+PPE duplicates sequences and overwrites dedicated slots with positional vectors, preserving 90%+ original meaning. High ppe_dim prioritizes temporal stability, preventing gradient explosions in self-supervision. 
+
+We set the PPE dimension to **382**, which means **the whole 768dim vector was the positional encoding**.
 
 #### Stage 2: High-Difficulty Fine-Tuning – Progressive Overload (512-to-1 Awakening)
 
-With vBERT's foundations laid, Stage 2 applies the 'intentional destruction' of Progressive Overload: expose the primed model to atomic-level extremes via 512-to-1 datasets (token-chunked, all combination trees). **Low ppe_dim=16** shifts to 'meaning insightful' mode, minimizing temporal distortion.
+With vBERT's foundations laid, Stage 2 applies the 'intentional destruction' of Progressive Overload: expose the primed model to atomic-level extremes via 512-to-1 datasets (token-chunked, all combination trees).
+
+We set back the PPE dimension to **16**, almost low as possible.
 
 #### Stage 3: Standard Fine-Tuning – Peak Refinement (10-to-1 Mastery)
 
 Stage 3 polishes the awakened model with 10-to-1 datasets (50-token chunks, up to 10 elements), **maintaining ppe_dim=16** for semantic dominance. 
 
-## Benchmark Philosophy: Robust Separation Score (RSS) for RAG Utility
+<br></br>
+# Benchmark Philosophy: Robust Separation Score (RSS) for RAG Utility
+<br></br>
+
+<CaptionCenteredImage 
+  imageSrc={topographyImage}
+  caption="Always think about RAG again, and again."
+  imageAlt="Always think about RAG again, and again."
+/>
 
 Our Extrapolation Hypothesis demands not just theoretical elegance but empirical proof in real-world utility: Retrieval-Augmented Generation (RAG) systems. Traditional coherence metrics isolate internal consistency; we prioritize **RAG robustness**—ensuring synthesized vectors act as clear signals for relevant memories while drowning irrelevant noise, preventing hallucinations and off-topic retrievals.
 
@@ -396,300 +457,134 @@ Our Extrapolation Hypothesis demands not just theoretical elegance but empirical
 
 For benchmarks to measure true synthesis fidelity rather than data artifacts, all test chunks (A, B, C, ..., N) must exhibit **semantic independence**: no pre-existing thematic, stylistic, or topical similarities that could inflate or confound cosine scores. If, e.g., A and C share content from the same domain, synth(ABC) similarity to embed(C) might reflect correlation, not model merit—rendering evaluations invalid.
 
-Mirroring the vBERT pre-training corpus curation:
-
 - **Dataset Source:** Multi-language Wikipedia (wikipedia/wikipedia) editions (e.g., en, ko, fr, de, ja—spanning histories, sciences, arts, etc.).
-- **Generation Principle:** Shuffle articles globally, then apply '1 Article = 1 Probe' strictly: each full article processes into one unique chunk/embedding (embed(A)), without sliding windows, excerpts, or intra-article splits.
-- **Key Benefits:** Ensures probes originate from disparate 'worlds'—e.g., A from a Korean history article, B from French philosophy—guaranteeing baseline dissimilarities (avg. cosine \<0.1 pre-synthesis). This purity isolates model-induced affinities in RSS gaps, validating RAG signal strength.
-- **Implementation:** Custom pipeline similar to `data_pipeline.py` (10k-50k probes per language mix; no Devil randomization to preserve test integrity). Impure probes (e.g., same-language clusters) cap scores at \<5, subverting our 10+ FINESSE triumphs.
+- **Generation Principle:** Shuffle articles globally, then apply **1 Article = 1 Probe** strictly: each full article processes into one unique chunk/embedding, without sliding windows, excerpts, or intra-article splits.
 
 This prerequisite is foundational; benchmarks without it risk false positives, undermining the Extrapolation Hypothesis.
 
 ### Core Setup
-Given a document sequence of chunks A, B, C, D, E with pre-computed embeddings embed(A), ..., embed(E), our model generates cumulative syntheses: synth(AB) from embed(A)+embed(B), synth(ABC) from synth(AB)+embed(C), up to synth(ABCDE). Evaluations probe bidirectional fidelity: how well syntheses 'recognize' their constituents (Top-Down) and how constituents 'recognize' containing syntheses (Bottom-Up).
+
+Our evaluation process works as follows:
+
+*   **Given:** A document sequence of chunks `A, B, C, D, E` with their pre-computed embeddings `embed(A), ..., embed(E)`.
+*   **Model Input:** Our Sequence Merger model generates *cumulative syntheses*. For instance:
+    *   `synth(AB)` is created from `embed(A) + embed(B)`.
+    *   `synth(ABC)` is created from `synth(AB) + embed(C)`.
+    *   This continues up to `synth(ABCDE)`.
+*   **Purpose:** Evaluations then probe the `bidirectional fidelity` of these syntheses:
+    *   **Top-Down:** How well syntheses 'recognize' their constituents.
+    *   **Bottom-Up:** How constituents 'recognize' containing syntheses.
 
 ### Top-Down Evaluation: Synthesis-to-Constituents Fidelity
-Tests if a synthesis preserves affinity to its building blocks while rejecting outsiders. E.g., synth(ABC) should exhibit high cosine similarity to embed(A), embed(B), embed(C) (Tier 1: Memory Group X) but low to embed(D), embed(E) (Tier 2: Noise Group Y). This validates 'root retention': the synthesis hasn't forgotten its origins amid merging.
+
+This evaluation tests if a synthesized vector (`e.g., synth(ABC)`) effectively **preserves its affinity to its original building blocks** while **rejecting irrelevant details**.
+
+*   **Goal:** `synth(ABC)` should exhibit high cosine similarity to `embed(A), embed(B), embed(C)` (our designated `Memory Group X`).
+*   **Challenge:** Simultaneously, it should show low similarity to `embed(D), embed(E)` (our `Noise Group Y`).
+*   **What it validates:** This ensures `root retention`—that the synthesis hasn't forgotten its origins amidst the merging process.
 
 ### Bottom-Up Evaluation: Constituents-to-Syntheses Affinity
-Complements Top-Down by inverting perspective: a constituent should affinity-match containing syntheses but reject non-containing ones. E.g., embed(C) low similarity to synth(AB) (Noise Y) but high to synth(ABC), synth(ABCD), synth(ABCDE) (Memory X). This ensures 'role persistence': chunks remain anchored in their composite contexts.
+
+Complementing Top-Down, this evaluates from the constituent's perspective, checking if individual chunks correctly identify the syntheses they belong to.
+
+*   **Goal:** `embed(C)` should have high similarity to `synth(ABC), synth(ABCD), synth(ABCDE)` (our `Memory Group X`).
+*   **Challenge:** It should show low similarity to `synth(AB)` (our `Noise Group Y`).
+*   **What it validates:** This ensures `role persistence`—that chunks remain appropriately anchored within their composite contexts as the narrative unfolds.
 
 ### Robust Separation Score (RSS): Quantifying the Gap
-For any validator p (synthesis or constituent) against Groups X (expected similar) and Y (expected dissimilar):
 
-1. Compute all pairwise cosines: sims_X = [cos(p, x) for x in X], sims_Y = [cos(p, y) for y in Y].
-2. Sort sims_X ascending, sims_Y ascending.
-3. Gap = Q1_X (25th percentile of sims_X, weakest expected matches) - Q3_Y (75th percentile of sims_Y, strongest noise).
-4. Normalize gap to [0,1] score via min-max scaling (accounting for cosine [-1,1] bounds).
+RSS provides a robust metric for quantifying how well our system separates 'signal' from 'noise'. For any validator `p` (which can be a synthesis or a constituent) against a `Memory Group X` (expected similar) and a `Noise Group Y` (expected dissimilar):
 
-RSS demands the 'barely similar' (Q1_X) decisively outperform the 'most tempting noise' (Q3_Y), creating a 'silent margin' for RAG resilience. Quartiles ensure outlier-robustness: no single perfect match skews results.
+1.  **Compute Pairwise Cosine Similarities:**
+    *   `sims_X = [cos(p, x) for x in X]` (Similarities to expected matches)
+    *   `sims_Y = [cos(p, y) for y in Y]` (Similarities to expected dissimilar items)
+2.  **Sort and Find Quartiles:** Sort both `sims_X` and `sims_Y` in ascending order.
+    *   `Q1_X`: The 25th percentile of `sims_X` (representing the weakest, yet expected, matches).
+    *   `Q3_Y`: The 75th percentile of `sims_Y` (representing the strongest, most tempting noise).
+3.  **Calculate the Gap:**
+    *   `Gap = Q1_X - Q3_Y`
+4.  **Normalize to a [0,1] Score:** The gap is then normalized using min-max scaling to fit within a `[0, 1]` range, accounting for cosine similarity's `[-1, 1]` bounds.
+
+**The RSS demands a clear 'silent margin' for RAG resilience:** Even the weakest expected matches (`Q1_X`) must decisively outperform the strongest irrelevant noise (`Q3_Y`). Using quartiles makes the score robust against individual outliers and ensures a holistic evaluation.
 
 ### Final FINESSE Scoring: Balance with Penalty
-Aggregate td (Top-Down RSS average) and bu (Bottom-Up RSS average) as [0,1] scores:
 
-final = [ (td + bu)/2 - |td - bu| ] × 500
+The final `FINESSE` score aggregates the Top-Down (`td`) and Bottom-Up (`bu`) RSS averages, both normalized to `[0,1]` scores, into a single, comprehensive metric:
 
-- **Average:** Rewards overall separation.
-- **Imbalance Penalty (|td - bu|):** Discourages lopsided specialists; true mastery requires bidirectional consistency.
-- **Scaling (×500):** Transforms to intuitive [-1000, +1000] range.
+`FINESSE = [ (td + bu) / 2 - |td - bu| ] × 500`
 
-## Acknowledgments
+Let's break down each component:
 
-We extend our profoundest thanks to the **intfloat team** and the creators of the `multilingual-e5-base` model. This groundbreaking embedding model was the very foundation of our project: all training datasets were meticulously generated using E5 embeddings, our evaluations were judged against E5 as the gold standard benchmark, and the Synthesizer architecture was specifically designed in symbiotic harmony with E5's multilingual capabilities—making it an organic extension rather than a standalone entity. Without their visionary work in advancing multilingual representation, the Tiny Sequence Merger simply would not exist. Their open-source contribution is the true seed from which our innovations grew.
+*   **`(td + bu) / 2` (Average Performance):** This rewards overall effectiveness in separating signal from noise across both Top-Down and Bottom-Up evaluations.
+*   **`|td - bu|` (Imbalance Penalty):** This crucial term **penalizes models that are lopsided**. True mastery—both perceiving constituents within a synthesis and syntheses around a constituent—requires bidirectional consistency. A model that excels in one but fails in the other will receive a significant penalty.
+*   **`× 500` (Scaling):** This simply scales the final score to a more intuitive range, specifically `[-1000, +1000]`, making the results easier to interpret at a glance.
 
-Built with PyTorch and Transformers. For more on the underlying research, check our project logs.
+This comprehensive scoring mechanism ensures that our Sequence Merger is not just a specialist, but a well-rounded and robust solution for the complex demands of real-world RAG systems.
 
-# vBERT: Unlocking the Timeless Context
+<br></br>
+# What We Made Then?
 
-## Overview: The AI That Remembers Beyond Words
+Please note that this project is in-development progress. This article also will be upgraded when new achivement arrise.
 
-Even in the richest conversations, the nuances of our beginnings often fade. Imagine savoring a cherished coffee with a friend—the initial burst of flavor, the comforting aroma—only for it to abstract into 'just a good coffee' over time. We strive to retain context, yet each broken link in our memory's chain risks unraveling the whole. Does the subtle memory of coffee's taste truly just vanish?
+## Finesse-Benchmark: Robust Separation Score Benchmark in Python
+<div class="rows">
+  <CustomLinkPreview 
+    url="https://github.com/enzoescipy/finesse-benchmark"
+    image={githubImage}
+    alt="Finesse-Benchmark"
+    tight={true}
+  />
+  <CustomLinkPreview 
+    url="https://huggingface.co/datasets/enzoescipy/finesse-benchmark-database"
+    image={hfImage}
+    alt="Finesse-Benchmark-Database (Generator included)"
+    tight={true}
+  />
+</div>
+### Introduction
 
-No. Humans possess a unique power untouched by current AI: the ability to beautifully forget, yet flexibly remember. We compress and faintly connect memories. While the impression of coffee's nuanced aroma might fade, a similar scent can instantly conjure thoughts of old friends and shared moments. This is the flexibility of human memory.
+The **Finesse Benchmark** is a sophisticated evaluation framework designed to assess the performance of long-context embedding models on semantic understanding and information retention. Unlike traditional benchmarks that rely on superficial metrics, Finesse focuses on **Relative Semantic Similarity (RSS)**—a robust metric that measures how well models distinguish between relevant ("memory") and irrelevant ("noise") chunks in long sequences.
 
-### The AI That Forgets: The Transformer Decoder, BERT, and RAG's Limitations
+### Key Features
 
-For nearly a decade, the Transformer architecture, particularly its decoder variant (the engine behind models like ChatGPT), revolutionized how AI processes language. These models became masters of generating fluent text, akin to a continuous storytelling game. However, much like in a relay story, their 'context window' imposes a hard limit. Information beyond this window simply vanishes, disregarded as if a page ripped from a book.
+- **Modular Evaluation Modes**: Supports `merger_mode` (using sequence-merger with a base embedder), `native_mode` (direct long-context embedders), and `BYOK_mode` (Bring Your Own Keys for external APIs via LiteLLM)
+- **Dynamic Probe Generation**: Creates synthetic probes from atomic text chunks in the dataset, masking portions to test reconstruction accuracy
+- **Top-Down and Bottom-Up Scoring**: Combines contextual coherence with individual chunk integrity
+- **Reproducibility and Integrity**: Outputs include self-contained content hashes for verification
 
-Then came BERT, the 'silent librarian.' A master of understanding, BERT could analyze an entire sentence, capturing its essence in a numerical 'embedding vector'—a distilled wisdom of its meaning, nuance, and emotion. This led to Retrieval-Augmented Generation (RAG), a brilliant symbiotic approach: the articulate writer (GPT) could consult the silent librarian (BERT) for relevant information, making AI appear to have a memory.
+### Quick Start
 
-RAG offers profound advancements. Yet, an ultimate question remains: Does it truly understand *time*?
+```bash
+# Install the benchmark
+pip install finesse-benchmark
 
-Consider this scenario, often encountered: You're deep into a night of work, the bitter taste of coffee mingling with a subtle, melancholic aroma—a feeling of solitude. You ask ChatGPT about your coffee. The model, consulting its RAG-powered 'library,' recalls every coffee-related discussion: "Ethiopian? Kenyan? Brazilian?" it enthusiastically asks. Then, a loved one enters, perhaps a mother, saying: "Stop working on the computer. Coffee late at night isn't good for you. You'll ruin your health."
+# Initialize configuration
+finesse init --output benchmark.yaml
 
-ChatGPT offers an excellent, polite reply, drawing from its 'library of meaning' to perfectly connect with past coffee conversations. But it utterly fails to grasp the **'temporal context'** of the mother's entrance—an event semantically unrelated to coffee, yet profoundly significant to the human experience. To RAG, the mother's worried words are just another text snippet; it cannot recognize this as a monumental event redefining the entire conversation's meaning within that specific moment.
+# Generate embeddings (adjust samples as needed)
+finesse generate --config benchmark.yaml --output results --samples 5 --seed 42
 
-This is where vBERT enters.
+# Compute scores
+finesse score --pt-path results/embeddings_merger_mode_finesse-benchmark-database.pt --output results
 
-vBERT is a custom neural architecture designed for **intelligent merging of variable-length vector sequences into a single representative vector**. It excels at tasks requiring sequence summarization, such as embedding aggregation in NLP or multimodal fusion, by capturing nuanced relational dynamics that extend beyond mere semantic similarity to encompass temporal coherence.
-
-This model transforms an input of N arbitrary vectors `(batch_size, seq_len, d_model)` into a fixed output `(batch_size, d_model)`, preserving semantic coherence while adapting to complex data flows.
-Please note that we trained this model fitting into the  **intfloat/mutilingual-e5-base** embed. Although the learning & training methology could be applied into other embedding models, this model follows the [intfloat/mutilingual-e5-base](https://huggingface.co/intfloat/multilingual-e5-base) as the elemental embedding engine.
-
-## Scale
-
-[[[please fill this section with the proper database & model scale.]]]
-
-The database has limited n=10, so this model **Might not properly handle mode than 10 seq of vectors**. 
-
-
-## Core Philosophy: The Extrapolation Hypothesis
-
-At the core of the Sequence Merger lies the **Extrapolation Hypothesis**—our guiding principle for transcending the inherent context length limitations of base embedding models like `intfloat/multilingual-e5-base` (max 512 tokens).
-
-### The Hypothesis
-We posit that by training a lightweight model to synthesize a single representative embedding from N individual chunk embeddings—where each chunk and their concatenation fit within the base model's context limit—the model learns not mere memorization, but the fundamental *function* of semantic synthesis. This function captures the relational dynamics and sequential coherence among vectors, allowing the model to preserve and integrate meaning progressively.
-
-### From N-to-1 Synthesis to Infinite Extrapolation
-- **Training Phase (Within Limits):** During training, inputs are N chunk embeddings `[vec(A), vec(B), ..., vec(N)]`, derived from texts where the full concatenation `A + B + ... + N` remains ≤512 tokens. The target is the base model's direct embedding `vec(A + B + ... + N)`, ensuring ground-truth supervision. This teaches the model to merge sequences reliably within bounded contexts.
-
-- **Inference Phase (Beyond Limits):** In deployment, the model's output—itself a synthesized vector—becomes an input for the next merge. By recursively chaining outputs (e.g., merge `[vec(A)..vec(K)]` to synth_vec(A..K), then merge with `[vec(K+1)..vec(M)]`), the model extrapolates to arbitrarily long sequences, far exceeding 512 tokens. This self-referential synthesis maintains 'semantic momentum,' avoiding catastrophic loss of earlier context.
-
-### Key Implications
-- **Extended Context:** Enables processing of documents, conversations, or streams of any length as a single coherent embedding, without relying on resource-intensive long-context models.
-- **Efficiency and Autonomy:** No need for repeated API calls or full-sequence re-embedding; operates on pre-computed chunks, reducing latency and cost to near-zero beyond initial embedding.
-- **Validation:** Initial experiments show stable cosine similarity (>0.75) in chained merges up to 10x the base limit, with minimal degradation in recall of initial chunks—proving the hypothesis's viability.
-
-## Usage
-
-The TransformerSynthesizer processes **pre-computed vector sequences** (e.g., embeddings from E5), not raw text. Load and use it via the Hugging Face Hub with `trust_remote_code=True`. Below is a realistic workflow integrating with `intfloat/multilingual-e5-base` for text-to-vector conversion.
-
-```python
-from transformers import AutoTokenizer, AutoModel
-import torch
-
-# Step 1: Load E5 tokenizer and model for embedding generation
-tokenizer = AutoTokenizer.from_pretrained('intfloat/multilingual-e5-base')
-e5_model = AutoModel.from_pretrained('intfloat/multilingual-e5-base')
-
-# Example: Batch of texts to merge (e.g., multiple sentences per document)
-texts = [
-    ["First sentence of batch 1.", "Second sentence of batch 1.", "Third sentence of batch 1."],
-    ["First sentence of batch 2.", "Second sentence of batch 2."]  # Variable lengths
-]
-batch_size = len(texts)
-
-# Step 2: Convert texts to embeddings using E5 (batch_size, seq_len, d_model)
-input_sequences = []
-for i in range(batch_size):
-    inputs = tokenizer(texts[i], return_tensors='pt', padding=True, truncation=True)
-    with torch.no_grad():
-        e5_outputs = e5_model(**inputs)
-        # Mean pool E5 outputs to get sentence embeddings (seq_len, d_model)
-        sentence_embeddings = e5_outputs.last_hidden_state.mean(dim=1)
-    input_sequences.append(sentence_embeddings)
-
-input_sequences = torch.cat(input_sequences, dim=0)  # (batch_size, seq_len, 768)
-
-# Step 3: Load our Synthesizer model
-synthesizer = AutoModel.from_pretrained(
-    "your-username/tiny-sequence-merger-soft-large",
-    trust_remote_code=True,
-    torch_dtype=torch.float16  # Optional: for efficiency
-)
-
-# Step 4: Forward pass to merge sequences
-with torch.no_grad():
-    merged_vectors = synthesizer(input_sequences).last_hidden_state  # Shape: (batch_size, d_model)
-
-print(f"Merged vectors shape: {merged_vectors.shape}")
-print("Synthesized embeddings ready for downstream tasks!")
+# Verify integrity
+finesse checksum --json-path results/benchmark_results.json
 ```
 
-This workflow highlights our model's role as a 'vector synthesizer': it takes E5 embeddings as input and produces a coherent, single representation per sequence. For configuration details, inspect `config.json`. The model supports batched, variable-length inference on GPU/CPU and integrates with the Transformers pipeline for downstream tasks.
+### Available Modes
 
-## Key Configurable Parameters
+- **Merger Mode**: Evaluate sequence-merger models with base embedders
+- **Native Mode**: Test direct long-context embedders like Snowflake Arctic Embed
+- **BYOK Mode**: Use external APIs (OpenAI, Cohere, etc.) via LiteLLM
 
-Our architecture shines through its flexible hyperparameters, allowing fine-tuned control over the pipeline:
+For detailed configuration options and advanced usage, visit the [Finesse-Benchmark GitHub repository](https://github.com/enzoescipy/finesse-benchmark) or check out the [dataset on Hugging Face](https://huggingface.co/datasets/enzoescipy/finesse-benchmark-database).
 
-- **d_model**: Embedding dimension (default: 768, E5-base compatible for seamless integration).
-- **num_layers**: Depth of the transformer stack (e.g., 4-7 layers for balanced performance).
-- **nhead**: Number of attention heads (default: 8; per-layer variations supported).
-- **layer_dims**: Variable intermediate dimensions per layer (e.g., `[3840, 1920, 768]` for progressive compression—our signature bottleneck design).
-- **ffn_dims**: Custom feed-forward hidden sizes per layer (e.g., `[8192, 6144, 4096]` for GLU-enhanced expansion).
-- **nhead_dims**: Per-layer head counts (e.g., `[4, 3, 2, 2, 2]` for adaptive attention scaling).
-- **use_glu**: Enable Gated Linear Units in FFN for non-linear gating (default: False; boosts expressivity in complex merges).
-- **dropout**: Regularization rate (e.g., 0.1-0.12 for stable training).
 
-These parameters enable architectures with 137M to 206M parameters, optimized for efficiency and coherence. Explore variants by tweaking `config.json` and retraining!
 
-## Training Philosophy: The Principle of Progressive Overload Fine-Tuning
 
-Our training paradigm emerges from a profound failure-turned-insight: an experiment with extreme datasets that initially devastated performance but ultimately revealed the path to superior generalization.
+<br></br>
+## N.E.X.T?
 
-### The Extreme Dataset: 512-to-1 and Its Catastrophic Debut
-To maximize data efficiency, we engineered an 'extreme' dataset by chunking source articles into single-token units—the atomic building blocks of embeddings. This created 512-to-1 pairs: inputs of 512 individual token embeddings, targeting the base model's direct embedding of the full sequence. From just hundreds of original articles, this yielded tens of thousands of input-target pairs, far outstripping the standard 10-to-1 dataset (merging up to 10 ~50-token chunks).
+Please note that this project is in-development progress!! This article also will be upgraded when new achivement arrise.
 
-However, directly training on this 512-to-1 data was nothing short of catastrophic. Our models didn't just perform poorly; they suffered **catastrophic forgetting**, with benchmark scores plummeting into oblivion. The sheer, overwhelming complexity of atomic extremes shattered the fragile structure of our lightweight mergers. It was a brutal lesson: brute-force exposure to the most granular data destroyed, rather than built, capability. We faced a profound failure, a moment where all seemed lost.
-
-### The Breakthrough: Progressive Overload as Pre-Training + Fine-Tuning – Embracing Failure as Our Forge
-The pivot came from reframing this devastating failure not as an end, but as a crucible. Instead of despairing, we envisioned a two-stage 'Progressive Overload' approach, directly inspired by athletic training: foundational strength must precede maximum load. This was our 'eureka' moment, a desperate gamble that yielded unprecedented results.
-
-1. **Stage 1: Atomic Pre-Training (512-to-1 as Foundation):** Feed the model 512-to-1 data first, with higher learning rates. This 'searing' phase intentionally disrupts and rebuilds the model's internals, teaching it the primal interactions of token-level vectors—like forging atomic bonds in a vacuum. Though scores crash initially, it instills a robust 'semantic substrate' for handling fine-grained relationships.
-
-2. **Stage 2: Molecular Fine-Tuning (10-to-1 as Specialization):** Transition to the target 10-to-1 dataset. This 'refinement' phase leverages the pre-trained foundation to master higher-level synthesis, chaining atomic insights into coherent 'molecular' embeddings. Remarkably, a single epoch yields dramatic recovery, surpassing vanilla 10-to-1 training.
-
-By embracing failure as the crucible for growth, Progressive Overload ensures our mergers evolve from fragile aggregators to resilient synthesizers—ready for the infinite extrapolation promised by our core philosophy.
-
-### Key Innovation: Paired Positional Encoding (PPE)
-Within this paradigm, PPE addresses the challenge of injecting sequence order into high-dimensional chunk embeddings without distorting their rich semantics. Traditional positional encodings add noise-like signals, degrading benchmarks; PPE duplicates the sequence and *overwrites* dedicated dimension slots (front/back split) with position vectors, preserving 90%+ of original meaning while enabling precise positional awareness.
-
-## Core Self-Supervised Method: vBERT
-
-vBERT represents our crowning achievement: a vector-native adaptation of BERT-style pre-training, tailored for sequence mergers. By leveraging PPE, vBERT uses two intertwined self-supervised tasks—vMLM (violated Masked Language Model) and vNSP (violated Next Sentence Prediction)—to instill temporal and semantic coherence in the model. These tasks run concurrently, with total loss = loss_vmlm + loss_vnsp, enabling the model to evolve from a mere aggregator to a deep synthesizer of meaning.
-
-### Critical Prerequisite: The `1-Article-1-Sequence` Dataset
-
-vBERT's self-supervised pre-training requires a meticulously curated dataset to preserve the integrity of its learning signals, especially for vNSP's continuity detection.
-
-Standard n-to-1 datasets (e.g., 512-to-1 or 10-to-1) are incompatible for vBERT:
-
-- **Self-Supervised Nature:** vBERT does not rely on ground-truth to-1 vectors; attempts to use such datasets introduce unnecessary supervisory noise absent in pure self-supervision.
-- **The False History Paradox:** Sliding-window construction generates overlapping, semantically coherent sequences from the same source. In vNSP, creating 'false histories' by splicing can inadvertently produce near-identical continuations (e.g., adjacent overlaps), leading to false negatives. The model learns to flag coherent narratives as 'disrupted,' creating a schizophrenic training signal that erodes context awareness and caps pre-training efficacy.
-
-To eliminate this, we developed a dedicated pre-training corpus from `wikipedia/wikipedia` (multi-language editions like en, ko, fr, etc.) 1 Article = 1 Sequence. Process each full article into a single, unbroken vector sequence without sliding windows or partial excerpts.
-
-### vMLM: Self-Consistent Vector Reconstruction
-vMLM refines the MLM paradigm for vectors, enforcing that predictions maintain global sequence coherence via a feedback injection loop.
-
-1. **Masking:** Randomly mask 15% of tokens in the input sequence, e.g., [A, B, C, D, E] → [A, M, C, D, E].
-2. **Forward Pass on Masked Sequence:** Pass through the model with PPE duplication, yielding hidden layer outputs [cls', a1', m1', c1', d1', e1', a2', m2', c2', d2', e2']. Extract the predicted masked vectors m1' (first duplicate) and m2' (second duplicate).
-3. **Original CLS Acquisition:** Pass the unmasked original sequence through the model to obtain CLS_orig (the final CLS token after PPE processing).
-4. **Prediction Injection:** Re-pass the masked sequence, but during PPE, stealthily replace the masked positions with the predicted m1' and m2' (integrating into the appropriate front/back slots). This generates CLS_guesses (new CLS token).
-5. **Strict L1 Loss Computation:** Calculate L1 loss (Mean Absolute Error across all 768 dimensions) between CLS_guesses and CLS_orig. Unlike lenient cosine similarity, L1 demands exact matching of both direction *and* magnitude, forging unyielding precision in reconstructions.
-
-### vNSP: Binary Continuity Classification
-vNSP upgrades NSP for vectors, using a classification head to detect sequence authenticity and penalize disruptions.
-
-1. **History Generation:** For 50% of batches, create false histories: split the sequence at mid-point (split_idx = len // 2), discard the latter half, and splice in a random prefix from another sequence (for this reason, database should not be neither the 512-to-1 nor the 10-to-1. this will be discuss later.), e.g., [A, B, C] → [A, B, D'] where D' disrupts flow.
-2. **PPE Processing:** Apply PPE to true/false sequences independently, embedding positional cues to highlight discontinuities in false cases.
-3. **Classification Head:** Forward to get normalized CLS (cls_norm), pass through a dedicated NSP head (nn.Linear(768, 2)) yielding logits [IsNext, NotNext].
-4. **Cross-Entropy Loss:** Label true as 0 (IsNext), false as 1 (NotNext); compute CE loss. High ppe_dim amplifies temporal breaks; low ppe_dim focuses on semantic jarring.
-
-## The 3-Stage Rocket Protocol: Unified Training Philosophy
-
-At the apex of our Extrapolation Hypothesis lies the 3-Stage Rocket Protocol—a comprehensive, battle-tested blueprint that propels models from naive aggregators to extrapolative synthesizers. Forged from iterative experimentation, this protocol synthesizes our key innovations (PPE, vBERT) and strategies (Progressive Overload) into a seamless ascent: Stage 1 builds philosophical foundations, Stage 2 stress-tests through overload, and Stage 3 refines for peak performance. vBERT, though disastrous in isolation (benchmarks plummeting as loss decreases), shines as the irreplaceable 'launchpad'—pre-pre-training that awakens innate vector synthesis principles.
-
-#### Stage 1: Pre-Pre-Training – vBERT (Instilling First Principles)
-
-vBERT serves as the 'temporal archaeologist' phase: a self-supervised pre-training regime that etches core principles of vector coherence into a blank-slate model, using PPE (high ppe_dim=384) to inject positional fidelity without semantic distortion.
-
-**Key Enabler: Paired Positional Encoding (PPE)** 
-PPE duplicates sequences and overwrites dedicated slots (front/back m/2 splits, m=ppe_dim) with positional vectors, preserving 90%+ original meaning. High ppe_dim (384) prioritizes temporal stability, preventing gradient explosions in self-supervision. 
-
-#### Stage 2: High-Difficulty Fine-Tuning – Progressive Overload (512-to-1 Awakening)
-
-With vBERT's foundations laid, Stage 2 applies the 'intentional destruction' of Progressive Overload: expose the primed model to atomic-level extremes via 512-to-1 datasets (token-chunked, all combination trees). **Low ppe_dim=16** shifts to 'meaning insightful' mode, minimizing temporal distortion.
-
-#### Stage 3: Standard Fine-Tuning – Peak Refinement (10-to-1 Mastery)
-
-Stage 3 polishes the awakened model with 10-to-1 datasets (50-token chunks, up to 10 elements), **maintaining ppe_dim=16** for semantic dominance. 
-
-## Benchmark Philosophy: Robust Separation Score (RSS) for RAG Utility
-
-Our Extrapolation Hypothesis demands not just theoretical elegance but empirical proof in real-world utility: Retrieval-Augmented Generation (RAG) systems. Traditional coherence metrics isolate internal consistency; we prioritize **RAG robustness**—ensuring synthesized vectors act as clear signals for relevant memories while drowning irrelevant noise, preventing hallucinations and off-topic retrievals.
-
-### Critical Prerequisite: Semantically Distinct Probes
-
-For benchmarks to measure true synthesis fidelity rather than data artifacts, all test chunks (A, B, C, ..., N) must exhibit **semantic independence**: no pre-existing thematic, stylistic, or topical similarities that could inflate or confound cosine scores. If, e.g., A and C share content from the same domain, synth(ABC) similarity to embed(C) might reflect correlation, not model merit—rendering evaluations invalid.
-
-Mirroring the vBERT pre-training corpus curation:
-
-- **Dataset Source:** Multi-language Wikipedia (wikipedia/wikipedia) editions (e.g., en, ko, fr, de, ja—spanning histories, sciences, arts, etc.).
-- **Generation Principle:** Shuffle articles globally, then apply '1 Article = 1 Probe' strictly: each full article processes into one unique chunk/embedding (embed(A)), without sliding windows, excerpts, or intra-article splits.
-- **Key Benefits:** Ensures probes originate from disparate 'worlds'—e.g., A from a Korean history article, B from French philosophy—guaranteeing baseline dissimilarities (avg. cosine \<0.1 pre-synthesis). This purity isolates model-induced affinities in RSS gaps, validating RAG signal strength.
-- **Implementation:** Custom pipeline similar to `data_pipeline.py` (10k-50k probes per language mix; no Devil randomization to preserve test integrity). Impure probes (e.g., same-language clusters) cap scores at \<5, subverting our 10+ FINESSE triumphs.
-
-This prerequisite is foundational; benchmarks without it risk false positives, undermining the Extrapolation Hypothesis.
-
-### Core Setup
-Given a document sequence of chunks A, B, C, D, E with pre-computed embeddings embed(A), ..., embed(E), our model generates cumulative syntheses: synth(AB) from embed(A)+embed(B), synth(ABC) from synth(AB)+embed(C), up to synth(ABCDE). Evaluations probe bidirectional fidelity: how well syntheses 'recognize' their constituents (Top-Down) and how constituents 'recognize' containing syntheses (Bottom-Up).
-
-### Top-Down Evaluation: Synthesis-to-Constituents Fidelity
-Tests if a synthesis preserves affinity to its building blocks while rejecting outsiders. E.g., synth(ABC) should exhibit high cosine similarity to embed(A), embed(B), embed(C) (Tier 1: Memory Group X) but low to embed(D), embed(E) (Tier 2: Noise Group Y). This validates 'root retention': the synthesis hasn't forgotten its origins amid merging.
-
-### Bottom-Up Evaluation: Constituents-to-Syntheses Affinity
-Complements Top-Down by inverting perspective: a constituent should affinity-match containing syntheses but reject non-containing ones. E.g., embed(C) low similarity to synth(AB) (Noise Y) but high to synth(ABC), synth(ABCD), synth(ABCDE) (Memory X). This ensures 'role persistence': chunks remain anchored in their composite contexts.
-
-### Robust Separation Score (RSS): Quantifying the Gap
-For any validator p (synthesis or constituent) against Groups X (expected similar) and Y (expected dissimilar):
-
-1. Compute all pairwise cosines: sims_X = [cos(p, x) for x in X], sims_Y = [cos(p, y) for y in Y].
-2. Sort sims_X ascending, sims_Y ascending.
-3. Gap = Q1_X (25th percentile of sims_X, weakest expected matches) - Q3_Y (75th percentile of sims_Y, strongest noise).
-4. Normalize gap to [0,1] score via min-max scaling (accounting for cosine [-1,1] bounds).
-
-RSS demands the 'barely similar' (Q1_X) decisively outperform the 'most tempting noise' (Q3_Y), creating a 'silent margin' for RAG resilience. Quartiles ensure outlier-robustness: no single perfect match skews results.
-
-### Final FINESSE Scoring: Balance with Penalty
-Aggregate td (Top-Down RSS average) and bu (Bottom-Up RSS average) as [0,1] scores:
-
-final = [ (td + bu)/2 - |td - bu| ] × 500
-
-- **Average:** Rewards overall separation.
-- **Imbalance Penalty (|td - bu|):** Discourages lopsided specialists; true mastery requires bidirectional consistency.
-- **Scaling (×500):** Transforms to intuitive [-1000, +1000] range.
-
-## Acknowledgments
-
-We extend our profoundest thanks to the **intfloat team** and the creators of the `multilingual-e5-base` model. This groundbreaking embedding model was the very foundation of our project: all training datasets were meticulously generated using E5 embeddings, our evaluations were judged against E5 as the gold standard benchmark, and the Synthesizer architecture was specifically designed in symbiotic harmony with E5's multilingual capabilities—making it an organic extension rather than a standalone entity. Without their visionary work in advancing multilingual representation, the Tiny Sequence Merger simply would not exist. Their open-source contribution is the true seed from which our innovations grew.
-
-Built with PyTorch and Transformers. For more on the underlying research, check our project logs.
-
-# vBERT: The Alchemist of Time – Reaching Beyond Meaning's Prison
-
-vBERT is born from the core question: "What if an AI could be shown two disparate narratives (like the coffee and the mother's concern) in chronological order, and then tasked with summarizing the entire unfolding story into a single vector, capturing its temporal flow?"
-
-vBERT is not merely the Sequence Merger; it's the **Vectorized BERT**, a model designed to learn the **sequence of embeddings** itself, rather than just sequences of words. It doesn't treat 'bitter coffee' vector, 'lonely feeling' vector, and 'mother's worry' vector as independent phenomena. Instead, vBERT synthesizes these disparate chunks of meaning within a temporal flow, condensing them into a single, new vector representing the **'atmosphere of that night.'**
-
-Much like individual scenes (vectors) in a film combine to create the movie's overarching emotion (a new vector), vBERT is the **'Alchemist of Time,'** refining temporally ordered embedding sequences into a final 'sequence embedding.'
-
-This marks a new era: **"vBERT empowers AI to finally break free from the prison of meaning, and to understand time itself."**
-
-AI can now move beyond merely predicting the next word or finding the most relevant document. It can grasp how events unfold in sequence, forming the complete tapestry of a story's context.
-
-This is vBERT. The journey continues, and we aim to soon share the models forged with vBERT technology here for all interested.
-
-## Acknowledgments
-
-We extend our profoundest thanks to the **intfloat team** and the creators of the `multilingual-e5-base` model. This groundbreaking embedding model was the very foundation of our project: all training datasets were meticulously generated using E5 embeddings, our evaluations were judged against E5 as the gold standard benchmark, and the Synthesizer architecture was specifically designed in symbiotic harmony with E5's multilingual capabilities—making it an organic extension rather than a standalone entity. Without their visionary work in advancing multilingual representation, the Tiny Sequence Merger simply would not exist. Their open-source contribution is the true seed from which our innovations grew.
+Thank You.
