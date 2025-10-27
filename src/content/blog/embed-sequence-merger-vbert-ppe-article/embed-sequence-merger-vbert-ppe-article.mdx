@@ -540,7 +540,11 @@ Please note that this project is in-development progress. This article also will
   />
 </div>
 
-## Overview
+In our vast library of meanings, **BERT** serves as the silent, ever-watchful librarian, deftly retrieving the most relevant books—embedding vectors—from endless shelves. But even the most knowledgeable librarian cannot fully appreciate the grand narrative that unfolds when these books are read in sequence, page by page, from beginning to end. 
+
+Here enter **Sarang and Malgeum**, our magical cats who come to the librarian's aid with boundless curiosity and grace. Like enchanted companions, they delicately paw through the volumes in precise order, not merely noting the facts but inhaling the soul of the story—the subtle tensions, the building emotions, the overarching atmosphere—that transforms a collection of isolated tomes into a single, living epic. Through their whimsical magic, these feline wonders gift the world a unified essence, where time and meaning dance as one.
+
+### Overview
 
 The Sequence Merger is a custom neural architecture designed for **intelligent merging of variable-length vector sequences into a single representative vector**. It excels at tasks requiring sequence summarization, such as embedding aggregation in NLP or multimodal fusion, outperforming standard mean-pooling by capturing nuanced relational dynamics.
 
@@ -548,7 +552,7 @@ This model transforms an input of N arbitrary vectors `(batch_size, seq_len, d_m
 
 **Note:** This model is specifically trained to work with embeddings from **[intfloat/multilingual-e5-base](https://huggingface.co/intfloat/multilingual-e5-base)**.
 
-## Usage
+### Usage
 
 The TransformerSynthesizer processes **pre-computed vector sequences** (e.g., embeddings from E5), not raw text. Load and use it via the Hugging Face Hub with `trust_remote_code=True`. Below is a realistic workflow integrating with `intfloat/multilingual-e5-base` for text-to-vector conversion.
 
@@ -616,11 +620,9 @@ print("Success! Batch synthesized embeddings ready.")
 
 This workflow highlights our model's role as a 'vector synthesizer': it takes E5 embeddings as input and produces a coherent, single representation per sequence. For configuration details, inspect `config.json`. The model supports batched, variable-length inference on GPU/CPU and integrates with the Transformers pipeline for downstream tasks.
 
-## Acknowledgments
+### Acknowledgments
 
 We extend our profoundest thanks to the **intfloat team** and the creators of the `multilingual-e5-base` model. This groundbreaking embedding model was the very foundation of our project: all training datasets were meticulously generated using E5 embeddings, our evaluations were judged against E5 as the gold standard benchmark, and the Synthesizer architecture was specifically designed in symbiotic harmony with E5's multilingual capabilities—making it an organic extension rather than a standalone entity. Without their visionary work in advancing multilingual representation, the Tiny Sequence Merger simply would not exist. Their open-source contribution is the true seed from which our innovations grew.
-
-Built with PyTorch and Transformers. For more on the underlying research, check our project logs.
 
 ## Finesse-Benchmark: Robust Separation Score Benchmark in Python
 <div class="rows">
@@ -674,20 +676,6 @@ finesse checksum --json-path results/benchmark_results.json
 - **BYOK Mode**: Use external APIs (OpenAI, Cohere, etc.) via LiteLLM
 
 For detailed configuration options and advanced usage, visit the [Finesse-Benchmark GitHub repository](https://github.com/enzoescipy/finesse-benchmark) or check out the [dataset on Hugging Face](https://huggingface.co/datasets/enzoescipy/finesse-benchmark-database).
-
-<div class="rows">
-  <CustomLinkPreview 
-    url="https://huggingface.co/enzoescipy/sequence-merger-malgeum"
-    alt="80M 경량 모델 - 맑음"
-    tight={true}
-  />
-  <CustomLinkPreview 
-    url="https://huggingface.co/enzoescipy/sequence-merger-sarang"
-    alt="270M 중량 모델 - 사랑"
-    tight={true}
-  />
-</div>
-
 
 <br></br>
 ## N.E.X.T?
