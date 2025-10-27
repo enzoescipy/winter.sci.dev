@@ -528,6 +528,100 @@ This comprehensive scoring mechanism ensures that our Sequence Merger is not jus
 
 Please note that this project is in-development progress. This article also will be upgraded when new achivement arrise.
 
+## Embedding Embedder, Magic cat that helps the librarian : Sarang(사랑) and Malgeum(맑음)
+<div class="rows">
+  <CustomLinkPreview 
+    url="https://huggingface.co/enzoescipy/sequence-merger-sarang"
+    caption="사랑하는 고양이, 사랑"
+  />
+  <CustomLinkPreview 
+    url="https://huggingface.co/enzoescipy/sequence-merger-malgeum"
+    caption="맑게 개어라, 맑음"
+  />
+</div>
+
+## Overview
+
+The Sequence Merger is a custom neural architecture designed for **intelligent merging of variable-length vector sequences into a single representative vector**. It excels at tasks requiring sequence summarization, such as embedding aggregation in NLP or multimodal fusion, outperforming standard mean-pooling by capturing nuanced relational dynamics.
+
+This model transforms an input of N arbitrary vectors `(batch_size, seq_len, d_model)` into a fixed output `(batch_size, d_model)`, preserving semantic coherence while adapting to complex data flows.
+
+**Note:** This model is specifically trained to work with embeddings from **[intfloat/multilingual-e5-base](https://huggingface.co/intfloat/multilingual-e5-base)**.
+
+## Usage
+
+The TransformerSynthesizer processes **pre-computed vector sequences** (e.g., embeddings from E5), not raw text. Load and use it via the Hugging Face Hub with `trust_remote_code=True`. Below is a realistic workflow integrating with `intfloat/multilingual-e5-base` for text-to-vector conversion.
+
+```python
+from transformers import AutoTokenizer, AutoModel
+import torch
+
+# Step 1: Load E5 tokenizer and model for embedding generation
+tokenizer = AutoTokenizer.from_pretrained('intfloat/multilingual-e5-base')
+e5_model = AutoModel.from_pretrained('intfloat/multilingual-e5-base')
+
+# Step 2: Example batch - Two documents with different lengths
+doc1 = ["First cat in doc1.", "Second cat in doc1."]  # 2 sentences
+doc2 = ["First cat in doc2.", "Second cat in doc2.", "Third cat in doc2."]  # 3 sentences
+texts = [doc1, doc2]  # Batch size = 2
+
+# Generate embeddings for each document separately
+batch_embeddings = []
+for doc in texts:
+    inputs = tokenizer(doc, return_tensors='pt', padding=True, truncation=True)
+    with torch.no_grad():
+        e5_outputs = e5_model(**inputs)
+        # Mean pool to get sentence embeddings (num_sentences, d_model)
+        doc_embeddings = e5_outputs.last_hidden_state.mean(dim=1)  # Shape: (num_sentences, 768)
+    batch_embeddings.append(doc_embeddings)
+
+# Find the maximum sequence length (max number of sentences) in the batch
+max_seq_len = max(len(emb) for emb in batch_embeddings)
+d_model = batch_embeddings[0].shape[-1]  # Embedding dimension (768)
+
+print(f"Max sequence length in batch: {max_seq_len}")
+print(f"Individual shapes: {[emb.shape for emb in batch_embeddings]}")
+
+# Pad each document's embeddings to max_seq_len
+padded_embeddings = []
+for emb in batch_embeddings:
+    if len(emb) < max_seq_len:
+        # Create zero padding tensor
+        pad = torch.zeros(max_seq_len - len(emb), d_model, dtype=emb.dtype, device=emb.device)
+        padded_emb = torch.cat([emb, pad], dim=0)
+    else:
+        padded_emb = emb
+    padded_embeddings.append(padded_emb)
+
+# Stack into 3D tensor: (batch_size, max_seq_len, d_model)
+input_sequences = torch.stack(padded_embeddings, dim=0)
+print(f"Input shape to synthesizer: {input_sequences.shape}")
+
+# Step 3: Load our Synthesizer model
+synthesizer = AutoModel.from_pretrained(
+    "enzoescipy/sequence-merger-malgeum",
+    trust_remote_code=True,
+)
+
+# Step 4: Forward pass to merge sequences in batch
+with torch.no_grad():
+    # Match dtype
+    input_sequences = input_sequences.to(dtype=synthesizer.dtype)
+    merged_output = synthesizer(input_sequences)
+    merged_vectors = merged_output.pooler_output  # Shape: (batch_size, d_model)
+
+print(f"Merged vectors shape: {merged_vectors.shape}")
+print("Success! Batch synthesized embeddings ready.")
+```
+
+This workflow highlights our model's role as a 'vector synthesizer': it takes E5 embeddings as input and produces a coherent, single representation per sequence. For configuration details, inspect `config.json`. The model supports batched, variable-length inference on GPU/CPU and integrates with the Transformers pipeline for downstream tasks.
+
+## Acknowledgments
+
+We extend our profoundest thanks to the **intfloat team** and the creators of the `multilingual-e5-base` model. This groundbreaking embedding model was the very foundation of our project: all training datasets were meticulously generated using E5 embeddings, our evaluations were judged against E5 as the gold standard benchmark, and the Synthesizer architecture was specifically designed in symbiotic harmony with E5's multilingual capabilities—making it an organic extension rather than a standalone entity. Without their visionary work in advancing multilingual representation, the Tiny Sequence Merger simply would not exist. Their open-source contribution is the true seed from which our innovations grew.
+
+Built with PyTorch and Transformers. For more on the underlying research, check our project logs.
+
 ## Finesse-Benchmark: Robust Separation Score Benchmark in Python
 <div class="rows">
   <CustomLinkPreview 
@@ -581,7 +675,18 @@ finesse checksum --json-path results/benchmark_results.json
 
 For detailed configuration options and advanced usage, visit the [Finesse-Benchmark GitHub repository](https://github.com/enzoescipy/finesse-benchmark) or check out the [dataset on Hugging Face](https://huggingface.co/datasets/enzoescipy/finesse-benchmark-database).
 
-
+<div class="rows">
+  <CustomLinkPreview 
+    url="https://huggingface.co/enzoescipy/sequence-merger-malgeum"
+    alt="80M 경량 모델 - 맑음"
+    tight={true}
+  />
+  <CustomLinkPreview 
+    url="https://huggingface.co/enzoescipy/sequence-merger-sarang"
+    alt="270M 중량 모델 - 사랑"
+    tight={true}
+  />
+</div>
 
 
 <br></br>
