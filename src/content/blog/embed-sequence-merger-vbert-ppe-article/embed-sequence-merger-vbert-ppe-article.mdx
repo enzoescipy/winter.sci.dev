@@ -38,6 +38,7 @@ import roketImage from "./source/roket.jpg";
 import topographyImage from "./source/topography.png";
 import githubImage from "./source/github.png";
 import hfImage from "./source/hf.png";
+import anatomyImage from "./source/anatomy.png";
 
 
 
@@ -677,12 +678,58 @@ finesse checksum --json-path results/benchmark_results.json
 
 For detailed configuration options and advanced usage, visit the [Finesse-Benchmark GitHub repository](https://github.com/enzoescipy/finesse-benchmark) or check out the [dataset on Hugging Face](https://huggingface.co/datasets/enzoescipy/finesse-benchmark-database).
 
-<br></br>
-## N.E.X.T?
+## Finess-Benchmark-Leaderboard: Where Performance Meets the True Cost of Context
 
-Please note that this project is in-development progress!! This article also will be upgraded when new achivement arrise.
+<div class="rows">
+  <CustomLinkPreview 
+    url="https://huggingface.co/spaces/enzoescipy/finesse-benchmark-space"
+    caption="Launch the FINESSE Leaderboard: Compare `malgeum`, `sarang`, and more!"
+    imageAlt="Interactive FINESSE Leaderboard Space"
+  />
+</div>
 
-Thank You.
+The ***FINESSE leaderboard*** isn't just a table of numbers—it's an interactive laboratory for dissecting the profound trade-off between **semantic fidelity** (how well models capture long-context meaning, measured by RSS/FINESSE scores) and **computational efficiency** (the real-world 'price' of that intelligence, measured by Latency). Here, we reveal the hidden economics of AI embeddings: the 'true cost of context' that determines whether a model's brilliance is practical or prohibitively expensive.
+
+### Latency: The True Cost of Context
+
+Latency quantifies the **time penalty** of processing longer sequences, exposing how architectures scale (or falter) under extended contexts. But our philosophy goes deeper: we measure not just raw speed, but the **architectural fairness** in revealing efficiency's roots. Why? Because true innovation lies in decoupling 'thinking' from 'preparation'—caching reusable insights to slash redundant work.
+
+#### Sequence Merger Models: Efficiency Through Separation (Full Time vs. Merging Only)
+
+For our Sequence Merger architecture, we split Latency into two transparent metrics to highlight its modular genius:
+
+- **Full Time**: The end-to-end reality of processing a long document from scratch. This includes:
+  - **Chunk Embedding**: Time to generate individual embeddings for each segment (e.g., via the base `intfloat/multilingual-e5-base` model on 512-token chunks).
+  - **Merging Only**: The core synthesis time—feeding pre-embedded chunks into the Merger for rapid fusion.
+  
+  *Example*: For a 2048-token document split into four 512-token chunks, Full Time = (4 × E5 embedding time) + Merging time for the cumulative sequence. This reflects real deployment: **initial chunking costs upfront, but subsequent Mergers are lightning-fast.**
+
+#### Native Mode Models: The Indivisible Burden of Direct Processing
+
+In stark contrast, Native long-context models (e.g., Snowflake Arctic Embed with 8192 tokens) process the *entire sequence in one monolithic pass*. There's no separation of concerns—no caching chunks for reuse. Thus, their time is **indivisible**:
+
+- **Full Time = Merging Only**: A single, exhaustive computation over the full input. Every token demands fresh attention, scaling quadratically with length (O(n²) in Transformers).
+  
+  *Example*: For 2048 tokens, it's one giant forward pass—no shortcuts. This honesty reveals the 'hidden tax' of brute-force scaling: impressive RSS scores come at exponentially rising Latency, prohibitive for resource-constrained RAG pipelines.
+
+**Philosophical Fairness**: We record the same value for both metrics in Native Mode to avoid illusions, a reminder that longer windows demand deeper wallets.
+
+### The Leaderboard as Interactive Philosophy
+
+Visit the [FINESSE Benchmark Space](https://huggingface.co/spaces/enzoescipy/finesse-benchmark-space) to explore this trade-off landscape yourself. Toggle between models, sequences (512-8192 tokens), and modes (Merger vs. Native). Watch as our Sarang and Malgeum maintain fair RSS scores with sub-second Latencies—while giants like Arctic Embed trade high RSS score with the latency.
+
+### Plus, the Interactive Anatomy Laboratory
+
+<CaptionCenteredImage 
+  imageSrc={anatomyImage}
+  caption="Visualize the RSS score with your own eyes."
+  imageAlt="Visualize the RSS score with your own eyes."
+/>
+
+Ready to witness the magic of RSS in action? Dive straight into the **Anatomy Laboratory** within the [FINESSE Benchmark Space](https://huggingface.co/spaces/enzoescipy/finesse-benchmark-space). Here, you can experiment with any model, watching as the RSS score unfolds in real-time through TD (Top-Down) and BU (Bottom-Up) analysis. It's your hands-on portal to understanding how our syntheses preserve—and even enhance—semantic fidelity!
+
+# Thank you for reading
+This is all I founded. Thank you!
 
 <details>
   <summary>Reference And Citation</summary>
