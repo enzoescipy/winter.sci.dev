@@ -506,21 +506,26 @@ RSS provides a robust metric for quantifying how well our system separates 'sign
     *   `Q3_Y`: The 75th percentile of `sims_Y` (representing the strongest, most tempting noise).
 3.  **Calculate the Gap:**
     *   `Gap = Q1_X - Q3_Y`
-4.  **Normalize to a [0,1] Score:** The gap is then normalized using min-max scaling to fit within a `[0, 1]` range, accounting for cosine similarity's `[-1, 1]` bounds.
+
+Since cosine similarities range from -1 to +1, the theoretical bounds of RSS are:
+- **Minimum (-2):** Worst case where Q1_X = -1 (all expected matches are dissimilar) and Q3_Y = +1 (strongest noise is highly similar), Gap = -1 - 1 = -2.
+- **Maximum (+2):** Best case where Q1_X = +1 (weakest expected match is perfectly similar) and Q3_Y = -1 (strongest noise is perfectly dissimilar), Gap = 1 - (-1) = +2.
+
+Thus, RSS = Gap has a natural range of [-2, +2], directly reflecting the model's ability to create separation without artificial normalization.
 
 **The RSS demands a clear 'silent margin' for RAG resilience:** Even the weakest expected matches (`Q1_X`) must decisively outperform the strongest irrelevant noise (`Q3_Y`). Using quartiles makes the score robust against individual outliers and ensures a holistic evaluation.
 
 ### Final FINESSE Scoring: Balance with Penalty
 
-The final `FINESSE` score aggregates the Top-Down (`td`) and Bottom-Up (`bu`) RSS averages, both normalized to `[0,1]` scores, into a single, comprehensive metric:
+The final `FINESSE` score aggregates the Top-Down (`td`) and Bottom-Up (`bu`) RSS values (each in [-2, +2]) into a single, comprehensive metric:
 
 `FINESSE = [ (td + bu) / 2 - |td - bu| ] × 500`
 
 Let's break down each component:
 
-*   **`(td + bu) / 2` (Average Performance):** This rewards overall effectiveness in separating signal from noise across both Top-Down and Bottom-Up evaluations.
-*   **`|td - bu|` (Imbalance Penalty):** This crucial term **penalizes models that are lopsided**. True mastery—both perceiving constituents within a synthesis and syntheses around a constituent—requires bidirectional consistency. A model that excels in one but fails in the other will receive a significant penalty.
-*   **`× 500` (Scaling):** This simply scales the final score to a more intuitive range, specifically `[-1000, +1000]`, making the results easier to interpret at a glance.
+*   **`(td + bu) / 2` (Average Performance):** This rewards overall effectiveness in separating signal from noise across both Top-Down and Bottom-Up evaluations. Since td and bu are in [-2, +2], their average is also in [-2, +2].
+*   **`|td - bu|` (Imbalance Penalty):** This crucial term **penalizes models that are lopsided**. True mastery—both perceiving constituents within a synthesis and syntheses around a constituent—requires bidirectional consistency. A model that excels in one but fails in the other will receive a significant penalty. The absolute difference is subtracted to enforce balance.
+*   **`× 500` (Scaling):** Given the average-minus-imbalance result is within roughly [-2, +2], multiplying by 500 scales it to the intuitive range of `[-1000, +1000]`. This makes high scores (near +1000) indicate exceptional balanced performance, while negative scores (down to -1000) highlight failures in separation.
 
 This comprehensive scoring mechanism ensures that our Sequence Merger is not just a specialist, but a well-rounded and robust solution for the complex demands of real-world RAG systems.
 
